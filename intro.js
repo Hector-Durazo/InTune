@@ -1,15 +1,10 @@
-import React from "react"
-import { StyleSheet, Image, Text, View, ImageBackground, Dimension } from "react-native"
-import {useFonts} from 'expo-font'
+import React from "react";
+import { StyleSheet, Image, Text, View, ImageBackground, Dimension } from "react-native";
+import {useFonts, Inter_400Regular} from '@expo-google-fonts/inter';
 
 export default function Intro() {
-    const [loaded] = useFonts({
-        Monserrat: require('./assets/fonts/Inter-Regular.ttf'
-        )
+    const [loaded] = useFonts({Inter_400Regular
     });
-    if(!loaded){
-        return null;
-    }
   return (
     <View style={styles.Intro}>
       <View style={styles.LoadingScreen}>
@@ -49,7 +44,7 @@ const styles = StyleSheet.create({
   },
   Txt935: {
     fontSize: 24,
-    fontFamily: "Inter-Regular",
+    fontFamily: "Inter_400Regular",
     fontWeight: "400",
     color: "rgba(206,110,242,1)",
     textAlign: "center",
