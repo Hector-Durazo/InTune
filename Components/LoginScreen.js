@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(0,0,0,0.25)",
     elevation: 0,
     shadowOffset: { width: 0, height: 4 },
-    width: 390,
-    height: 844,
+    width: "100%",
+    height: "100%",
   },
   LoginScreen: {
     display: "flex",
@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     paddingBottom: 69,
     paddingLeft: 19,
     paddingRight: 19,
-    borderRadius: 32,
     backgroundColor: "rgba(15,15,15,1)",
     width: 390,
     height: 844,
