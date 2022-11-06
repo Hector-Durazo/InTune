@@ -4,6 +4,6 @@ import Intro from "./Components/Intro";
 import LoginScreen from "./Components/LoginScreen";
 
 export default function App() {
-  return <LoginScreen />;
-  
+	return <Intro />;
+	//return <LoginScreen />;
 }
