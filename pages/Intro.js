@@ -1,16 +1,23 @@
 import React from "react";
 import { StyleSheet, Image, Text, View, ImageBackground, Dimension } from "react-native";
 import {useFonts, Inter_400Regular} from '@expo-google-fonts/inter';
+import AppLoading from "expo-app-loading";
 
-export default function Intro() {
-    const [loaded] = useFonts({Inter_400Regular
+export default function Intro({navigation}) {
+    setTimeout(()=>{
+      navigation.navigate('Login')
+    },3000)
+    let [fontsLoaded] = useFonts({Inter_400Regular
     });
+    if(!fontsLoaded){
+      return <AppLoading/>
+    }
   return (
     <View style={styles.Intro}>
       <View style={styles.LoadingScreen}>
         <Image
           style={styles.Frame4}
-          source={require("./assets/InTune_Logo.png")
+          source={require("../assets/InTune_Logo.png")
           }
         />
         <Text style={styles.Txt935}>Share, Listen, Together</Text>
