@@ -1,10 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Animated, View, Text, TextInput, Pressable } from "react-native";
-import {useFonts, Inter_400Regular} from '@expo-google-fonts/inter';
 import styles from "../styles/App.component.style.js"
 import Button from "../components/Button.js"
 
-export default function LoginScreen() {
+export default function LoginScreen({navigation}) {
   // Animations
   const logoFade = useRef(new Animated.Value(0)).current
   const introFade = useRef(new Animated.Value(0)).current
@@ -13,8 +12,8 @@ export default function LoginScreen() {
   const [inputState, setInput] = useState("none")
   useEffect(()=>{
     Animated.sequence([
+      // Fade in Logo and Tagline
       Animated.parallel([
-
         Animated.timing(logoFade,
           {
             toValue: 1,
@@ -28,7 +27,7 @@ export default function LoginScreen() {
             useNativeDriver: true
           })
       ]),
-
+      // Translate logo, fade out tagline
       Animated.parallel([
         Animated.timing(introAnim,
           {
@@ -43,7 +42,7 @@ export default function LoginScreen() {
             useNativeDriver: true
           })
       ]),
-
+      // Fade in login
       Animated.timing(loginFade,
         {
           toValue: 1,
@@ -58,20 +57,16 @@ export default function LoginScreen() {
   return (
     <View style={styles.MainView}>
       <Animated.Image
-        style={{
-          ...styles.Logo, 
-          opacity:logoFade,
-          transform: [{
-            translateY: introAnim.interpolate({
-              inputRange: [0,1],
-              outputRange: [200,0]
-            })
-          }]
-        }}
-        source={
-          require("../assets/InTune_Logo.png")
-        }
-      />
+				style={{
+				...styles.Logo, 
+				opacity:logoFade,
+				transform: [{
+					translateY: introAnim.interpolate({
+					inputRange: [0,1],
+					outputRange: [200,0]
+					})
+				}]}}
+				source={require("../assets/InTune_Logo.png")}/>
       <Animated.View style={{
           opacity:loginFade, 
           }}>
@@ -85,7 +80,7 @@ export default function LoginScreen() {
           />
         <View style={styles.Row}>
           <Button>Create Account</Button>
-          <Button variant="accent">Sign In</Button>
+          <Button onPress={() => navigation.navigate('Main')} variant="accent">Sign In</Button>
         </View>
       </Animated.View>
       <Animated.Text style={{
