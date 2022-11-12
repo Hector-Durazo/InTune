@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 // Global style sheet
 
 export default styles = StyleSheet.create({
+	// Container for screen elements
 	MainView: {
 		display: "flex",
 		flexDirection: "column",
@@ -13,8 +14,9 @@ export default styles = StyleSheet.create({
 		shadowOffset: { width: 0, height: 4 },
 		width: "100%",
 		height: "100%",
-		backgroundColor: "rgba(15,15,15,1)",
+		backgroundColor: "#0F0F0F",
 	},
+	// Container for a row of elements
 	Row: {
 		flexDirection: "row",
 		justifyContent: "flex-start",
@@ -34,7 +36,7 @@ export default styles = StyleSheet.create({
 	padding: 10,
 	marginBottom: 20,
 	borderRadius: 15,
-	color: "rgba(223,221,228,1)",
+	color: "#DFDDE4",
 	backgroundColor: "rgba(141,106,246,0.27)",
 	width: 230,
 	height: 50,
