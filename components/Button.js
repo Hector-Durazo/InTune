@@ -38,14 +38,15 @@ export default function Button(props) {
 const styles = StyleSheet.create({
 	Text: {
 		textAlign: 'center',
-		fontSize: 14,
+		fontSize: 20,
 		fontFamily: "Inter_400Regular",
 		fontWeight: "400",
 		padding: 0
 	},
 	Button: {
-		marginHorizontal: 8,
-		padding: 9,
+		marginVertical: "1%",
+		width: "70%",
+		paddingVertical: "3%",
 		borderRadius: 15,
 	}
 })
