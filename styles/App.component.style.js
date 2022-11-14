@@ -23,29 +23,35 @@ export default styles = StyleSheet.create({
 		alignItems: "flex-start",
 	},
 	Logo: {
-	width: 315,
-	height: 129,
-	marginTop: 100,
-	marginBottom: 20
+		width: "80%",
+		height: "20%",
+		marginBottom: "5%"
+	},
+	PhoneContainer: {
+		padding: "2%",
+		marginBottom: 20,
+		borderRadius: 15,
+		color: "#DFDDE4",
+		backgroundColor: "rgba(141,106,246,0.27)",
+		width: "80%",
+		height: "26%",
+	},
+	PhoneTextContainer: {
+		borderRadius: 15,
+		backgroundColor: "rgba(141,106,246,0.27)",
 	},
 	TextField: {
-	display: "flex",
-	flexDirection: "column",
-	justifyContent: "center",
-	alignItems: "center",
-	padding: 10,
-	marginBottom: 20,
-	borderRadius: 15,
-	color: "#DFDDE4",
-	backgroundColor: "rgba(141,106,246,0.27)",
-	width: 230,
-	height: 50,
+		padding: "2%",
+		borderRadius: 15,
+		color: "#DFDDE4",
+		backgroundColor: "rgba(141,106,246,0.27)",
+		fontSize: 18,
 	},
 	Text: {
-	textAlign: 'center',
-	fontSize: 20,
-	fontFamily: "Inter_400Regular",
-	fontWeight: "400",
-	padding: 10
+		textAlign: 'center',
+		fontSize: 20,
+		fontFamily: "Inter_400Regular",
+		fontWeight: "400",
+		padding: 10
 	},
 });
