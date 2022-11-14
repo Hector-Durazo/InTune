@@ -8,7 +8,7 @@ export default function MainScreen() {
 
 	return(
 		<View style={styles.MainView}>
-			<Header/>
+
 		</View>
 	);
 }

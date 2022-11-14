@@ -24,9 +24,8 @@ export default styles = StyleSheet.create({
 	},
 	Logo: {
 		width: "80%",
-		height: "15%",
-		marginTop: 100,
-		marginBottom: 20
+		height: "20%",
+		marginBottom: "5%"
 	},
 	PhoneContainer: {
 		padding: "2%",
@@ -43,12 +42,9 @@ export default styles = StyleSheet.create({
 	},
 	TextField: {
 		padding: "2%",
-		marginBottom: 20,
 		borderRadius: 15,
 		color: "#DFDDE4",
 		backgroundColor: "rgba(141,106,246,0.27)",
-		width: "75%",
-		height: "20%",
 		fontSize: 18,
 	},
 	Text: {

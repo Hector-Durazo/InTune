@@ -2,10 +2,10 @@ import React, { useRef, useEffect, useState } from "react";
 import { Dimensions, Animated, View, Text, TextInput, Pressable } from "react-native";
 import styles from "../styles/App.component.style.js";
 import Button from "../components/Button.js";
-import {auth, verifier, signInSend, signInConfirm} from "../utils/Auth.js";
-
+import PhoneInput from "../components/PhoneInput.js";
 
 export default function LoginScreen({navigation}) {
+
   // Animations
   const logoFade = useRef(new Animated.Value(0)).current
   const introFade = useRef(new Animated.Value(0)).current
@@ -54,14 +54,13 @@ export default function LoginScreen({navigation}) {
     ]).start();
   })
 
-  const inputSlide = useRef(new Animated.Value(0)).current;
+  
 
   // References and Variables
-  const phoneInput = useRef(null);
-  const phoneNo = useRef(null)
-  const formatted = useRef(null)
+  const verified = useRef(null);
+  const userRef = useRef(null);
 
-  const winWidth = Dimensions.get('window').width;
+  const winHeight = Dimensions.get('window').height;
 
   return (
     <View style={styles.MainView}>
@@ -72,77 +71,23 @@ export default function LoginScreen({navigation}) {
 				transform: [{
 					translateY: introSlide.interpolate({
 					inputRange: [0,1],
-					outputRange: [120,0]
+					outputRange: [winHeight/4,0]
 					})
 				}]}}
 				source={require("../assets/InTune_Logo.png")}/>
-      <Animated.View style={{
-          ...styles.Row,
-          width: "200%",
-          opacity:loginFade,
-          transform: [{
-            translateX: inputSlide.interpolate({
-              inputRange: [0,1],
-              outputRange: [winWidth/2, -winWidth/2]
-            })
-          }]
-          }}>
-        <View style={{...styles.MainView, width:"50%"}}>
-          <TextInput
-              ref={phoneInput}
-              defaultCode="US"
-              defaultValue={phoneNo.current}
-              placeholder="(000) 000-0000"
-              containerStyle={styles.PhoneContainer}
-              textContainerStyle={styles.PhoneTextContainer}
-              onChangeText={(text)=>{
-                phoneNo.current = text;
-              }}
-              onChangeFormattedText={(text) => {
-                formatted.current = text;
-              }}/>
-          <Button id="signInButton" 
-          onPress={() => {
-            const valid = phoneInput.current?.isValidNumber(phoneNo.current);
-            if(valid){
-              // Phone number is valid
-              console.log("Valid Number")
-              Animated.timing(inputSlide,{
-                toValue: 1,
-                duration: 500,
-                useNativeDriver: true
-              }).start()
-            } else{
-              console.log("Invalid Number")
-              // Phone number is invalid
-            }
-          }} variant="accent">
-            Continue
-          </Button>
-        </View>
-        <View style={{...styles.MainView, width:"50%"}}>
-          <TextInput 
-            placeholder="Confirmation Code" 
-            style={styles.TextField}/>
-          <Button variant="accent">
-            Confirm
-          </Button>
-          <Button onPress={()=> {
-            Animated.timing(inputSlide,{
-              toValue: 0,
-              duration: 500,
-              useNativeDriver: true
-            }).start()
-          }}>
-            Cancel
-          </Button>
-        </View>
-    
+      <Animated.View>
+        <PhoneInput 
+          loginFade={loginFade}
+          user={userRef}
+          onConfirm={() => {navigation.navigate("Main")}}
+          />
       </Animated.View>
       <Animated.Text style={{
         ...styles.Text, 
         opacity:introFade,
-        color:"#CE6EF2"
+        color:"#CE6EF2",
+        position: "absolute",
+        top: winHeight/2
         }}>
         Share, Listen, Together
       </Animated.Text>

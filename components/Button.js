@@ -8,7 +8,7 @@ import { Pressable, Text, StyleSheet } from "react-native"
 // 		<Button variant="accent">Button Text</Button>
 
 export default function Button(props) {
-	let {children, onPress, variant="regular"} = props;
+	let {children, onPress, variant="regular", pressStyle={}, textStyle={}} = props;
 	let buttonStyles = {};
 	switch(variant) {
 		case "regular":
@@ -27,26 +27,26 @@ export default function Button(props) {
 	return (
 		<Pressable onPress={onPress} style={({pressed})=>[
 			{
-				...styles.Button, ...buttonStyles,
+				...compStyles.Button, ...buttonStyles, ...pressStyle,
 				transform: [{scale: pressed ? 0.9 : 1.0}]
 			}]}>
-            <Text style={{...styles.Text, ...buttonStyles}}>{children}</Text>
+            <Text style={{...compStyles.Text, ...buttonStyles, ...textStyle}}>{children}</Text>
 		</Pressable>
 	)
 }
 
-const styles = StyleSheet.create({
+const compStyles = StyleSheet.create({
 	Text: {
 		textAlign: 'center',
 		fontSize: 20,
 		fontFamily: "Inter_400Regular",
 		fontWeight: "400",
-		padding: 0
+		padding: 0,
 	},
 	Button: {
 		marginVertical: "1%",
 		width: "70%",
-		paddingVertical: "3%",
+		padding: "3%",
 		borderRadius: 15,
 	}
 })
