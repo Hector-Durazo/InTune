@@ -1,15 +1,16 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Animated, View, Text, TextInput, Pressable } from "react-native";
-import styles from "../styles/App.component.style.js"
-import Button from "../components/Button.js"
+import { Dimensions, Animated, View, Text, TextInput, Pressable } from "react-native";
+import styles from "../styles/App.component.style.js";
+import Button from "../components/Button.js";
+import PhoneInput from "../components/PhoneInput.js";
 
 export default function LoginScreen({navigation}) {
+
   // Animations
   const logoFade = useRef(new Animated.Value(0)).current
   const introFade = useRef(new Animated.Value(0)).current
-  const introAnim = useRef(new Animated.Value(0)).current
+  const introSlide = useRef(new Animated.Value(0)).current
   const loginFade = useRef(new Animated.Value(0)).current
-  const [inputState, setInput] = useState("none")
   useEffect(()=>{
     Animated.sequence([
       // Fade in Logo and Tagline
@@ -29,7 +30,7 @@ export default function LoginScreen({navigation}) {
       ]),
       // Translate logo, fade out tagline
       Animated.parallel([
-        Animated.timing(introAnim,
+        Animated.timing(introSlide,
           {
             toValue: 1,
             duration: 800,
@@ -50,9 +51,16 @@ export default function LoginScreen({navigation}) {
           useNativeDriver: true
         }
       )
-      
     ]).start();
   })
+
+  
+
+  // References and Variables
+  const verified = useRef(null);
+  const userRef = useRef(null);
+
+  const winHeight = Dimensions.get('window').height;
 
   return (
     <View style={styles.MainView}>
@@ -61,32 +69,25 @@ export default function LoginScreen({navigation}) {
 				...styles.Logo, 
 				opacity:logoFade,
 				transform: [{
-					translateY: introAnim.interpolate({
+					translateY: introSlide.interpolate({
 					inputRange: [0,1],
-					outputRange: [200,0]
+					outputRange: [winHeight/4,0]
 					})
 				}]}}
 				source={require("../assets/InTune_Logo.png")}/>
-      <Animated.View style={{
-          opacity:loginFade, 
-          }}>
-        <TextInput
-          style={styles.TextField}
-          placeholder={"Email"}
+      <Animated.View>
+        <PhoneInput 
+          loginFade={loginFade}
+          user={userRef}
+          onConfirm={() => {navigation.navigate("Main")}}
           />
-        <TextInput 
-          style={styles.TextField}
-          placeholder={"Password"}
-          />
-        <View style={styles.Row}>
-          <Button>Create Account</Button>
-          <Button onPress={() => navigation.navigate('Main')} variant="accent">Sign In</Button>
-        </View>
       </Animated.View>
       <Animated.Text style={{
         ...styles.Text, 
         opacity:introFade,
-        color:"#CE6EF2"
+        color:"#CE6EF2",
+        position: "absolute",
+        top: winHeight/2
         }}>
         Share, Listen, Together
       </Animated.Text>
