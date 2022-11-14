@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Dimensions, Animated, View, Text, TextInput, Pressable } from "react-native";
-import PhoneInput from "react-native-phone-number-input";
 import styles from "../styles/App.component.style.js";
 import Button from "../components/Button.js";
 import {auth, verifier, signInSend, signInConfirm} from "../utils/Auth.js";
@@ -89,7 +88,7 @@ export default function LoginScreen({navigation}) {
           }]
           }}>
         <View style={{...styles.MainView, width:"50%"}}>
-          <PhoneInput
+          <TextInput
               ref={phoneInput}
               defaultCode="US"
               defaultValue={phoneNo.current}
@@ -108,7 +107,6 @@ export default function LoginScreen({navigation}) {
             if(valid){
               // Phone number is valid
               console.log("Valid Number")
-              signInSend(phoneNo.current)
               Animated.timing(inputSlide,{
                 toValue: 1,
                 duration: 500,
