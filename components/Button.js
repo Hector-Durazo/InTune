@@ -1,4 +1,4 @@
-import { Pressable, Text, StyleSheet } from "react-native"
+import { Pressable, Text, StyleSheet, Image } from "react-native"
 
 // Button Component
 // Has variants:
@@ -8,7 +8,7 @@ import { Pressable, Text, StyleSheet } from "react-native"
 // 		<Button variant="accent">Button Text</Button>
 
 export default function Button(props) {
-	let {children, onPress, variant="regular", pressStyle={}, textStyle={}} = props;
+	let {children, onPress, variant="regular", pressStyle={}, textStyle={}, image=null, imgStyle={}} = props;
 	let buttonStyles = {};
 	switch(variant) {
 		case "regular":
@@ -30,7 +30,8 @@ export default function Button(props) {
 				...compStyles.Button, ...buttonStyles, ...pressStyle,
 				transform: [{scale: pressed ? 0.9 : 1.0}]
 			}]}>
-            <Text style={{...compStyles.Text, ...buttonStyles, ...textStyle}}>{children}</Text>
+            {image ? <Image style={imgStyle} source={image}/> : 
+			<Text style={{...compStyles.Text, ...buttonStyles, ...textStyle}}>{children}</Text>}
 		</Pressable>
 	)
 }
@@ -48,5 +49,7 @@ const compStyles = StyleSheet.create({
 		width: "70%",
 		padding: "3%",
 		borderRadius: 15,
+		justifyContent: "center",
+		alignItems: "center",
 	}
 })

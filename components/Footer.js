@@ -3,21 +3,10 @@ import { Image, StyleSheet, View, Animated } from "react-native";
 import styles from "../styles/App.component.style.js";
 import Button from "../components/Button.js";
 import { app, auth } from "../firebaseConfig.js";
+import { checkNewUser } from "../utils/UserData.js";
 
 export default function Footer(props) {
-	let {children} = props
-
-	const footerSlide = useRef(new Animated.Value(0)).current;
-	
-	auth.onAuthStateChanged((user) => {
-		if(user) {
-			Animated.timing(footerSlide,{
-				toValue: 1,
-				duration: 500,
-				useNativeDriver: true
-			}).start()
-		}
-	})
+	const {showRef} = props
 
 	return(
 		<View style={{...compStyles.Footer}}>
@@ -25,7 +14,7 @@ export default function Footer(props) {
 				...styles.Row, ...compStyles.FooterContainer,
 				transform: 
 				[{
-					translateY: footerSlide.interpolate({
+					translateY: showRef.current.interpolate({
 						inputRange: [0,1],
 						outputRange: [150,0]
 					})
@@ -42,24 +31,20 @@ export default function Footer(props) {
 const compStyles = StyleSheet.create({
 	Footer: {
 		width: "100%",
-		height: "10%",
+		height: "15%",
 		backgroundColor: "#0F0F0F",
 	},
 	FooterContainer: {
 		width: "100%",
 		height: "100%",
 		backgroundColor: "black",
-		justifyContent: "space-between",
+		justifyContent: "space-evenly",
 		alignItems: "flex-start",
 		padding: "3%",
 	},
-	Logo: {
-		height: 36,
-		width: 32,
-	},
 	Button: {
-		width: "10%",
-		height: "auto",
-		borderRadius: 16
+		aspectRatio: "1/1",
+		width: "15%",
+		borderRadius: "100%"
 	},
 })

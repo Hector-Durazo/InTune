@@ -3,8 +3,11 @@ import { Dimensions, Animated, View, Text, TextInput, Pressable } from "react-na
 import styles from "../styles/App.component.style.js";
 import Button from "../components/Button.js";
 import PhoneInput from "../components/PhoneInput.js";
+import { auth } from "../firebaseConfig.js";
+import { getUserNames } from "../utils/UserData.js";
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({ route, navigation }) {
+  const {showRef} = route.params;
 
   // Animations
   const logoFade = useRef(new Animated.Value(0)).current
@@ -54,10 +57,26 @@ export default function LoginScreen({navigation}) {
     ]).start();
   })
 
-  
+  function logIn() {
+      getUserNames();
+      Animated.timing(showRef.current,{
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true
+      }).start()
+      navigation.reset({
+        index: 0,
+        routes: [{name: "Main"}]
+      })
+  }
+
+  auth.onAuthStateChanged((user) => {
+    if(user) {
+      setTimeout(() => {logIn();}, 800)
+    }
+  })
 
   // References and Variables
-  const verified = useRef(null);
   const userRef = useRef(null);
 
   const winHeight = Dimensions.get('window').height;
@@ -75,13 +94,11 @@ export default function LoginScreen({navigation}) {
 					})
 				}]}}
 				source={require("../assets/InTune_Logo.png")}/>
-      <Animated.View>
-        <PhoneInput 
-          loginFade={loginFade}
-          user={userRef}
-          onConfirm={() => {navigation.navigate("Main")}}
-          />
-      </Animated.View>
+      <PhoneInput 
+        loginFade={loginFade}
+        user={userRef}
+        onConfirm={logIn}
+        />
       <Animated.Text style={{
         ...styles.Text, 
         opacity:introFade,
