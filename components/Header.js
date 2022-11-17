@@ -3,21 +3,10 @@ import { Pressable, Image, StyleSheet, View, Animated } from "react-native";
 import styles from "../styles/App.component.style.js";
 import Button from "../components/Button.js";
 import { app, auth } from "../firebaseConfig.js";
+import { checkNewUser } from "../utils/UserData.js";
 
 export default function Header(props) {
-	let {children} = props
-
-	const headerSlide = useRef(new Animated.Value(0)).current;
-	
-	auth.onAuthStateChanged((user) => {
-		if(user) {
-			Animated.timing(headerSlide,{
-				toValue: 1,
-				duration: 500,
-				useNativeDriver: true
-			}).start()
-		}
-	})
+	const {showRef} = props
 
 	return(
 		<View style={{...compStyles.Header}}>
@@ -25,7 +14,7 @@ export default function Header(props) {
 				...styles.Row, ...compStyles.HeaderContainer,
 				transform: 
 				[{
-					translateY: headerSlide.interpolate({
+					translateY: showRef.current.interpolate({
 						inputRange: [0,1],
 						outputRange: [-150,0]
 					})
@@ -33,7 +22,17 @@ export default function Header(props) {
 			}}>
 				<Button pressStyle={compStyles.Button}></Button>
 				<Image style={compStyles.Logo} source={require("../assets/InTune_Logo_Icon.png")}/>
-				<Button pressStyle={compStyles.Button}></Button>
+				<Button 
+				pressStyle={compStyles.Button}
+				onPress={()=>{
+					auth.signOut()
+					Animated.timing(showRef.current,{
+						toValue: 0,
+						duration: 500,
+						useNativeDriver: true
+					}).start()
+				}}
+				></Button>
 			</Animated.View>
 		</View>
 	)

@@ -1,8 +1,10 @@
 import { useRef } from 'react';
-import { View, TextInput, StyleSheet, Animated, Dimensions } from "react-native";
+import { View, Text, TextInput, StyleSheet, Animated, Dimensions } from "react-native";
 import { FirebaseRecaptcha, FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
-import { app, auth } from "../firebaseConfig.js";
+import { app, auth, db } from "../firebaseConfig.js";
+import { spotifyCredentials, authorizeSpotify } from '../spotifyConfig.js';
+import { checkNewUser, updateUserData } from "../utils/UserData.js";
 import styles from "../styles/App.component.style.js";
 import Button from "./Button.js";
 
@@ -12,8 +14,6 @@ import Button from "./Button.js";
 
 export default function PhoneInput(props) {
 	let {loginFade, user, onConfirm} = props;
-
-	
 
 	const verifier = useRef(null);
 	const phoneNo = useRef(null);
@@ -25,14 +25,15 @@ export default function PhoneInput(props) {
 	const verifId = useRef(null);
 	const verifCode = useRef(null);
 
-	var slidePos = 1
-	function slideInput() {
+	const dispName = useRef("");
+	const username = useRef("");
+
+	function slideInput(pos) {
 		Animated.timing(inputSlide,{
-			toValue: slidePos,
+			toValue: pos,
 			duration: 500,
 			useNativeDriver: true
 		}).start()
-		slidePos == 0 ? slidePos = 1 : slidePos = 0;
 	}
 
 	async function sendCode() {
@@ -43,7 +44,7 @@ export default function PhoneInput(props) {
 			verifId.current = await provider.verifyPhoneNumber(phoneNumber, verifier.current);
 
 			//If successfully sent code
-			slideInput()
+			slideInput(1)
 
 		} catch(err) {
 			console.log(err)
@@ -54,25 +55,47 @@ export default function PhoneInput(props) {
 		try {
 			const credential = PhoneAuthProvider.credential(verifId.current, verifCode.current);
 			user.current = await signInWithCredential(auth, credential);
-			onConfirm();
+			// If existing user, log in
+			await checkNewUser(user.current.user).then((isNew) => {
+				if(!isNew) onConfirm();
+			})
+			// Continue Creating Account
+			slideInput(2);
+			
 		} catch(err) {
 			console.log(err)
 		}
+	}
+
+	function linkSpotify() {
+		if( (dispName.current == "") || (username.current == "")) return;
+		console.log(user.current.user.uid)
+		updateUserData(user.current.user, {
+			displayName: dispName.current,
+			username: username.current,
+		})
+		onConfirm();
 	}
 	
 	return (
 		<Animated.View style={{
 			...styles.Row,
-			width: "200%",
+			width: "400%",
 			opacity: loginFade,
 			transform: [{
 			  translateX: inputSlide.interpolate({
-				inputRange: [0,1],
-				outputRange: [winWidth/2, -winWidth/2]
+				inputRange: [0,1,2,3],
+				outputRange: [winWidth*3/2, winWidth*1/2, -winWidth*1/2, -winWidth*3/2]
 			  })
 			}]
 			}}>
-			<View style={{...styles.MainView, width:"50%"}}>
+			<View style={{...styles.MainView, width:"25%"}}>
+				<Text style={{
+					...styles.Text, ...styles.TextLight, ...compStyles.Text,
+					fontSize:14
+					}}>
+					Enter Phone Number
+				</Text>
 				<View style={{...styles.Row, ...styles.TextField, ...compStyles.InputContainer}}>
 					<TextInput
 					style={{...compStyles.ExtField}}
@@ -96,7 +119,13 @@ export default function PhoneInput(props) {
 				>Continue
 				</Button>
 			</View>
-			<View style={{...styles.MainView, width:"50%"}}>
+			<View style={{...styles.MainView, width:"25%"}}>
+				<Text style={{
+					...styles.Text, ...styles.TextLight, ...compStyles.Text,
+					fontSize:14
+					}}>
+					We sent you a code!
+				</Text>
 				<TextInput 
 				placeholder="Confirmation Code" 
 				keyboardType="numeric"
@@ -112,8 +141,45 @@ export default function PhoneInput(props) {
 				</Button>
 				<Button
 				pressStyle={compStyles.Button}
-				onPress={slideInput}>
+				onPress={() => slideInput(0)}>
 				Cancel
+				</Button>
+			</View>
+			<View style={{...styles.MainView, width:"25%"}}>
+				<Text style={{
+					...styles.Text, ...styles.Heading, 
+					...compStyles.Text, color:"#8D6AF6",
+					}}>
+					Welcome!
+				</Text>
+				<Text style={{
+					...styles.Text, ...styles.TextLight, ...compStyles.Text,
+					fontSize:14
+					}}>
+					Display Name
+				</Text>
+				<TextInput 
+				placeholder="John Doe" 
+				style={{...styles.TextField, ...compStyles.ConfField, height:"12%"}}
+				value={dispName}
+				onChangeText={value => dispName.current = value}
+				/>
+				<Text style={{
+					...styles.Text, ...styles.TextLight, ...compStyles.Text,
+					fontSize:14
+					}}>
+					Username
+				</Text>
+				<TextInput 
+				placeholder="jdoe1" 
+				style={{...styles.TextField, ...compStyles.ConfField, height:"12%"}}
+				value={username}
+				onChangeText={value => username.current = value}
+				/>
+				<Button 
+				pressStyle={compStyles.Button}
+				onPress={linkSpotify}>
+				Link Spotify
 				</Button>
 			</View>
 			
@@ -137,7 +203,7 @@ const compStyles = StyleSheet.create({
 	InputContainer: {
 		padding: 0,
 		width: "70%",
-		height: "30%",
+		height: "18%",
 		marginBottom: "2%",
 	},
 	PhoneField: {
@@ -160,13 +226,18 @@ const compStyles = StyleSheet.create({
 	},
 	ConfField: {
 		width: "70%",
-		height: "30%",
+		height: "18%",
 		fontSize: 18,
 		marginBottom: "2%",
 	},
 	Button: {
 		width: "60%",
 		marginVertical: "1%"
+	},
+	Text: {
+		width: "68%",
+		textAlign: "left",
+		marginBottom: "3%",
 	},
 })
 
