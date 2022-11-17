@@ -1,15 +1,9 @@
-import { useRef } from 'react';
-import { Animated } from 'react-native';
-import { NavigationContainer } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { useFonts, Inter_400Regular } from '@expo-google-fonts/inter';
-import { registerRootComponent } from "expo";
+import React from "react";
+import { StyleSheet, View, Text, Image, ImageBackground } from "react-native";
+import Intro from "./pages/Intro";
 import LoginScreen from "./pages/LoginScreen";
-import MainScreen from "./pages/MainScreen";
-import ShareScreen from "./pages/ShareScreen";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { LogBox } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
