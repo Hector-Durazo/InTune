@@ -11,6 +11,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { LogBox } from 'react-native';
 
+// Main App controller for navigation
+
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
