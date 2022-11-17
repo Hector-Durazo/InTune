@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
 import Constants from 'expo-constants';
 
 const firebaseConfig = {
@@ -9,12 +10,13 @@ const firebaseConfig = {
   storageBucket: "intune-cbe3f.appspot.com",
   messagingSenderId: "631113959498",
   appId: "1:631113959498:web:5f97f0bb4f37f63e9ebeb3",
-  measurementId: "G-PNKJSZY3NF"
+  measurementId: "G-PNKJSZY3NF",
+  databaseURL: "https://intune-cbe3f-default-rtdb.firebaseio.com/",
 };
 
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-auth.signOut();
+const db = getDatabase(app);
 
-export { app, auth };
+export { app, auth, db };

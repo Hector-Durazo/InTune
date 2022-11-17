@@ -52,6 +52,12 @@ export default styles = StyleSheet.create({
 		fontSize: 20,
 		fontFamily: "Inter_400Regular",
 		fontWeight: "400",
-		padding: 10
 	},
+	TextLight: {
+		color: "#DFDDE4",
+	},
+	Heading: {
+		fontSize: 28,
+		margin: "2%",
+	},	
 });
