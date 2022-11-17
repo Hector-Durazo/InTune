@@ -1,3 +1,15 @@
+import { useRef } from 'react';
+import { Animated } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { useFonts, Inter_400Regular } from '@expo-google-fonts/inter';
+import { registerRootComponent } from "expo";
+import LoginScreen from "./pages/LoginScreen";
+import MainScreen from "./pages/MainScreen";
+import ShareScreen from "./pages/ShareScreen";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import { LogBox } from 'react-native';
 
 // Main App controller for navigation
 
