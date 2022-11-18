@@ -42,6 +42,7 @@ export function getPosts(setPosts) {
 	const userRef = ref(db, 'users/' + auth.currentUser.uid + '/posts');
 	onValue(userRef, (snapshot) => {
 		const data = snapshot.val();
+		if(data == null) return;
 		setPosts(Object.values(data));
 	})
 }
