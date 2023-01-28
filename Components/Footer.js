@@ -5,6 +5,8 @@ import Button from "./Button.js";
 import { app, auth } from "../firebaseConfig.js";
 import { checkNewUser } from "../utils/UserData.js";
 
+// Footer
+
 export default function Footer(props) {
 	const {showRef} = props
 
