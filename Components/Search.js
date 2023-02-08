@@ -36,7 +36,7 @@ const compStyles = StyleSheet.create({
 		backgroundColor: "black"
 	},
 	SearchIcon: {
-		aspectRatio: "1/1",
+		aspectRatio: 1/1,
 		width: "8%",
 		marginRight: "5%",
 		tintColor: "#DFDDE4"

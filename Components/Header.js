@@ -58,7 +58,7 @@ const compStyles = StyleSheet.create({
 		width: 32,
 	},
 	Button: {
-		aspectRatio: "1/1",
+		aspectRatio: 1/1,
 		width: "8%",
 		borderRadius: 16
 	},
