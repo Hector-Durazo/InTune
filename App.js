@@ -7,6 +7,7 @@ import { registerRootComponent } from "expo";
 import LoginScreen from "./pages/LoginScreen";
 import MainScreen from "./pages/MainScreen";
 import ShareScreen from "./pages/ShareScreen";
+import FriendScreen from './pages/FriendScreen';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { LogBox } from 'react-native';
@@ -16,6 +17,7 @@ import { LogBox } from 'react-native';
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
+
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -48,6 +50,10 @@ export default function App() {
           },
           headerTintColor: "#DFDDE4"
           }}/>
+        <Stack.Screen name="Friend" component={FriendScreen} options={{
+          animation:"slide_from_left",
+          header:()=>null
+        }}/>
       </Stack.Navigator>
       <Footer showRef={showNav}/>
     </NavigationContainer>

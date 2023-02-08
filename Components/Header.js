@@ -41,7 +41,7 @@ export default function Header(props) {
 const compStyles = StyleSheet.create({
 	Header: {
 		width: "100%",
-		height: "13%",
+		height: "10%",
 		backgroundColor: "#0F0F0F",
 	},
 	HeaderContainer: {
@@ -50,15 +50,16 @@ const compStyles = StyleSheet.create({
 		backgroundColor: "black",
 		justifyContent: "space-between",
 		alignItems: "flex-end",
-		padding: "3%",
+		paddingVertical: "1%",
+		paddingHorizontal: "4%",
 	},
 	Logo: {
 		height: 36,
 		width: 32,
 	},
 	Button: {
-		width: "10%",
-		height: "auto",
+		aspectRatio: "1/1",
+		width: "8%",
 		borderRadius: 16
 	},
 })

@@ -48,7 +48,7 @@ const compStyles = StyleSheet.create({
 		marginVertical: "1%",
 		width: "70%",
 		padding: "3%",
-		borderRadius: 15,
+		borderRadius: 25,
 		justifyContent: "center",
 		alignItems: "center",
 	}

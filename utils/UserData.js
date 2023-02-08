@@ -43,6 +43,6 @@ export function getPosts(setPosts) {
 	onValue(userRef, (snapshot) => {
 		const data = snapshot.val();
 		if(data == null) return;
-		setPosts(Object.values(data));
+		setPosts(Object.values(data).reverse());
 	})
 }

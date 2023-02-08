@@ -61,3 +61,10 @@ export default styles = StyleSheet.create({
 		margin: "2%",
 	},	
 });
+
+export const colors = {
+	BlackSm : "#0F0F0F",
+	WhiteGb : "#DFDDE4",
+	PurpleSb :  "#8D6AF6",
+	GreyNi : "#3D3D3D",
+}
