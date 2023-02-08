@@ -4,10 +4,11 @@ import styles from "../styles/App.component.style.js";
 import Button from "../components/Button";
 import Search from "../components/Search";
 import Track from "../components/Track";
+import { searchSpotify } from "../utils/Spotify"
+
 
 export default function ShareScreen({ navigation }) {
 
-	const res = useRef(null);
 	const trackRef = useRef(null);
 	const [tracks, setTracks] = useState([]);
 
@@ -24,7 +25,10 @@ export default function ShareScreen({ navigation }) {
 
 	return(
 		<View style={styles.MainView}>
-			<Search onChange={(items)=>{
+			<Search 
+			placeholder="Search for a Song..."
+			onChange={async (text)=>{
+				var items = await searchSpotify(text)
 				setTracks(items);
 			}}/>
 			<ScrollView contentContainerStyle={ShareStyles.Scroll}>

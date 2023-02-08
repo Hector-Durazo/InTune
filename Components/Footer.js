@@ -33,7 +33,7 @@ export default function Footer(props) {
 const compStyles = StyleSheet.create({
 	Footer: {
 		width: "100%",
-		height: "15%",
+		height: "8%",
 		backgroundColor: "#0F0F0F",
 	},
 	FooterContainer: {
@@ -42,11 +42,11 @@ const compStyles = StyleSheet.create({
 		backgroundColor: "black",
 		justifyContent: "space-evenly",
 		alignItems: "flex-start",
-		padding: "3%",
+		padding: "1%",
 	},
 	Button: {
 		aspectRatio: "1/1",
-		width: "15%",
-		borderRadius: "100%"
+		width: "10%",
+		borderRadius: "100%",
 	},
 })

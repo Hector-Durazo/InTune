@@ -71,7 +71,7 @@ export default function LoginScreen({ route, navigation }) {
   }
 
   auth.onAuthStateChanged((user) => {
-    if(user) {
+    if((user) && (user.displayName)) {
       setTimeout(() => {logIn();}, 800)
     }
   })

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { View, Pressable, Text, StyleSheet, Image, Animated, Dimensions, TextInput, NativeModules } from "react-native";
-import styles from "../styles/App.component.style.js";
+import { styles, colors } from "../styles/App.component.style.js";
 import Button from './Button.js';
 import { addPost } from '../utils/UserData.js';
 
@@ -11,13 +11,14 @@ export default function Track(props) {
 
 	const slide = useRef(new Animated.Value(0)).current
 	const height = slide.interpolate({
-		inputRange: [0,1],
-		outputRange: [winWidth*.22, winWidth*.5]
+		inputRange: [0,1,2],
+		outputRange: [winWidth*.2, winWidth*.48, winWidth*.8]
 	});
 
 	const caption = useRef("");
 
 	function select() {
+		if(variant!="search") return;
 		if(selected.current) {
 			Animated.timing(selected.current, {
 				toValue: 0,
@@ -86,7 +87,7 @@ export default function Track(props) {
 					{albumImg}
 					<View style={{...compStyles.TextContainer}}>
 						<Text style={{...compStyles.Text}} numberOfLines={1}>{data.title}</Text>
-						<Text style={{...compStyles.Text}}>{data.artist}</Text>
+						<Text style={{...compStyles.Text, color:colors.GreyNi}}>{data.artist}</Text>
 					</View>
 				</View>
 				
@@ -96,7 +97,7 @@ export default function Track(props) {
 					<TextInput 
 					style={compStyles.CaptionText}
 					placeholder="Add a Caption..."
-					placeholderTextColor={"black"}
+					placeholderTextColor={colors.GreyNi}
 					value={caption}
 					onChangeText={text => caption.current=text}
 					/>
@@ -115,14 +116,15 @@ export default function Track(props) {
 
 const compStyles = StyleSheet.create({
 	TrackContainer: {
-		height: "5%",
-		width: "97%",
-		backgroundColor: "#DFDDE4",
-		borderRadius: 50,
+		// height: declared inline
+		width: "95%",
+		backgroundColor: colors.BlackSm,
+		borderRadius: 25,
 		marginBottom: 5,
-		marginHorizontal: "5%",
+		marginHorizontal: "2%",
 		paddingHorizontal: "5%",
-
+		borderWidth: 1,
+		borderColor: colors.GreyNi,
 	},
 	Row: {
 		flexDirection: "row",
@@ -131,35 +133,39 @@ const compStyles = StyleSheet.create({
 	AlbumArt: {
 		aspectRatio: "1/1",
 		height: 48,
-		margin: "5%",
-		borderRadius: "10%",
-		borderColor: "black",
+		marginVertical: "5%",
+		marginRight: "2%", 
+		borderRadius: 10,
+		borderColor: colors.WhiteGb,
 		borderWidth: 1
 	},
 	TextContainer: {
 		display: "flex",
 		flexDirection: "column",
 		width: "70%",
+		alignItems:"flex-start"
 	},
 	Text: {
 		flex: 0,
-		width: "100%"
+		width: "100%",
+		color: colors.WhiteGb
 	},
 	Selected: {
 		alignItems: "center",
 		justifyContent: "flex-start"
 	},
 	CaptionText: {
-		backgroundColor: "rgba(0, 0, 0, 0.15)",
-		color: "black",
-		width: "80%",
-		height: "35%",
-		borderRadius: "25%",
-		padding: "3%",
+		backgroundColor: "black",
+		color: colors.WhiteGb,
+		width: "95%",
+		height: "30%",
+		borderRadius: 25,
+		paddingHorizontal: "5%",
 	},
 	Button: {
-		width: "25%",
+		width: "27%",
 		height: "30%",
-		marginLeft: "55%"
+		marginLeft: "67%",
+		marginTop: "3%"
 	}
 })
