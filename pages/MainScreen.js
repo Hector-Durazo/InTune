@@ -54,14 +54,14 @@ const mainStyles = StyleSheet.create({
 		position: "absolute",
 		bottom: 20,
 		right: 20,
-		aspectRatio: "1/1",
+		aspectRatio: 1/1,
 		width: "20%",
-		borderRadius: "100%",
+		borderRadius: 100,
 		paddingHorizontal: "55%",
 	},
 	ShareButImg: {
 		position: "relative",
-		aspectRatio: ".90/1",
+		aspectRatio: .90/1,
 		height: "60%",
 	},
 	PostList: {

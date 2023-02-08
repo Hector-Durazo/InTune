@@ -131,7 +131,7 @@ const compStyles = StyleSheet.create({
 		alignItems: "center"
 	},
 	AlbumArt: {
-		aspectRatio: "1/1",
+		aspectRatio: 1/1,
 		height: 48,
 		marginVertical: "5%",
 		marginRight: "2%", 

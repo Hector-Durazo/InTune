@@ -53,9 +53,9 @@ export default function Post(props) {
 
 const compStyles = StyleSheet.create({
 	PostContainer: {
-		aspectRatio: "1.5/1",
+		aspectRatio: 1.5/1,
 		width: "90%",
-		borderRadius: "20%",
+		borderRadius: 20,
 		marginBottom: "2%",
 		padding: "4%"
 	},
@@ -63,9 +63,9 @@ const compStyles = StyleSheet.create({
 		flexDirection: "row"
 	},
 	UserPic: {
-		aspectRatio: "1/1",
+		aspectRatio: 1/1,
 		width: "15%",
-		borderRadius: "100%",
+		borderRadius: 100,
 		margin: "3%",
 		borderWidth: 1,
 	},
