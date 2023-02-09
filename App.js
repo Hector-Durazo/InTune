@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Animated } from 'react-native';
-import { NavigationContainer } from "@react-navigation/native"
+import { NavigationContainer, useNavigationContainerRef } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { useFonts, Inter_400Regular } from '@expo-google-fonts/inter';
 import { registerRootComponent } from "expo";
@@ -27,14 +27,15 @@ export default function App() {
   })
 
   const showNav = useRef(new Animated.Value(0))
+  const navRef = useNavigationContainerRef()
 
   if (!fontsLoaded) {
     return null;
   }
 
   return (
-    <NavigationContainer>
-      <Header showRef={showNav} />
+    <NavigationContainer ref={navRef}>
+      <Header showRef={showNav} navRef={navRef}/>
       <Stack.Navigator initialRouteName="Intro">
         <Stack.Screen name="Login" component={LoginScreen} initialParams={{ showRef: showNav }} options={{ header: () => null }} />
         <Stack.Screen name="Main" component={MainScreen} options={{ header: () => null }} />

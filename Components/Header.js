@@ -6,7 +6,7 @@ import { app, auth } from "../firebaseConfig.js";
 import { checkNewUser } from "../utils/UserData.js";
 
 export default function Header(props) {
-	const {showRef} = props
+	const {showRef, navRef} = props
 
 	return(
 		<View style={{...compStyles.Header}}>
@@ -20,7 +20,10 @@ export default function Header(props) {
 					})
 				}]
 			}}>
-				<Button pressStyle={compStyles.Button}></Button>
+				<Button 
+					pressStyle={compStyles.Button}
+					onPress={()=>{navRef.navigate("Profile")}}
+				></Button>
 				<Image style={compStyles.Logo} source={require("../assets/InTune_Logo_Icon.png")}/>
 				<Button 
 				pressStyle={compStyles.Button}

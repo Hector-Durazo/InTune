@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Animated, View, StyleSheet } from "react-native";
+import { Animated, View, StyleSheet, Text } from "react-native";
 import styles from "../styles/App.component.style.js";
 // Import Components
 import Button from "../components/Button.js";
@@ -10,7 +10,7 @@ export default function ProfileScreen() {
 	return(
 		// Page Contents
 		<View style={styles.MainView}>
-			
+			<Text></Text>
 		</View>
 	);
 }
