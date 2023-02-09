@@ -11,6 +11,7 @@ import FriendScreen from './pages/FriendScreen';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { LogBox } from 'react-native';
+import ProfileScreen from './pages/ProfileScreen';
 
 // Main App controller for navigation
 
@@ -27,18 +28,18 @@ export default function App() {
 
   const showNav = useRef(new Animated.Value(0))
 
-  if(!fontsLoaded){
+  if (!fontsLoaded) {
     return null;
   }
 
   return (
     <NavigationContainer>
-      <Header showRef={showNav}/>
+      <Header showRef={showNav} />
       <Stack.Navigator initialRouteName="Intro">
-        <Stack.Screen name="Login" component={LoginScreen} initialParams={{showRef:showNav}} options={{header:()=>null}}/>
-        <Stack.Screen name="Main" component={MainScreen} options={{header:()=>null}}/>
+        <Stack.Screen name="Login" component={LoginScreen} initialParams={{ showRef: showNav }} options={{ header: () => null }} />
+        <Stack.Screen name="Main" component={MainScreen} options={{ header: () => null }} />
         <Stack.Screen name="Share" component={ShareScreen} options={{
-          animation:"slide_from_bottom",
+          animation: "slide_from_bottom",
           title: "Share a Song",
           cardStyle: {
             backgroundColor: "transparent"
@@ -49,13 +50,17 @@ export default function App() {
             backgroundColor: "#0F0F0F",
           },
           headerTintColor: "#DFDDE4"
-          }}/>
+        }} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{
+          animation: "slide_from_right",
+          header: () => null
+        }} />
         <Stack.Screen name="Friend" component={FriendScreen} options={{
-          animation:"slide_from_left",
-          header:()=>null
-        }}/>
+          animation: "slide_from_left",
+          header: () => null
+        }} />
       </Stack.Navigator>
-      <Footer showRef={showNav}/>
+      <Footer showRef={showNav} />
     </NavigationContainer>
   )
 }
