@@ -13,8 +13,8 @@ export default function ProfileScreen() {
 	return (
 		// Page Contents
 		<View style={styles.MainView}>
-			<Text style={...ScreenStyles.name}>{name}</Text>
-			<Text style={...ScreenStyles.username}>{userName}</Text>
+			<Text style={ScreenStyles.name}>{name}</Text>
+			<Text style={ScreenStyles.username}>{userName}</Text>
 			<Text>{"biography here"}</Text>
 		</View>
 	);
