@@ -8,13 +8,14 @@ import Button from "../components/Button.js";
 export default function ProfileScreen() {
 	// Screen Variables, Refs, and Hooks
 	const name = auth.currentUser.displayName;
-	const userName = auth.currentUser.username;
+	const userName = "@" + auth.currentUser.username;
 
 	return (
 		// Page Contents
 		<View style={styles.MainView}>
-			<Text style={ScreenStyles.name}>{name}</Text>
-			<Text style={ScreenStyles.username}>{userName}</Text>
+			<Text style={...ScreenStyles.name}>{name}</Text>
+			<Text style={...ScreenStyles.username}>{userName}</Text>
+			<Text>{"biography here"}</Text>
 		</View>
 	);
 }
@@ -26,6 +27,7 @@ const ScreenStyles = StyleSheet.create({
 		color: "white",
 	},
 	username: {
+		fontStyle: "italic",
 		fontSize: 10,
 	},
 });
