@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 import { Image, StyleSheet, View, Animated } from "react-native";
 import styles from "../styles/App.component.style.js";
 import Button from "./Button.js";
@@ -8,26 +8,35 @@ import { checkNewUser } from "../utils/UserData.js";
 // Footer
 
 export default function Footer(props) {
-	const {showRef} = props
+	const { showRef, navRef } = props;
 
-	return(
-		<View style={{...compStyles.Footer}}>
-			<Animated.View style={{
-				...styles.Row, ...compStyles.FooterContainer,
-				transform: 
-				[{
-					translateY: showRef.current.interpolate({
-						inputRange: [0,1],
-						outputRange: [150,0]
-					})
-				}]
-			}}>
+	return (
+		<View style={{ ...compStyles.Footer }}>
+			<Animated.View
+				style={{
+					...styles.Row,
+					...compStyles.FooterContainer,
+					transform: [
+						{
+							translateY: showRef.current.interpolate({
+								inputRange: [0, 1],
+								outputRange: [150, 0],
+							}),
+						},
+					],
+				}}
+			>
 				<Button pressStyle={compStyles.Button}></Button>
-				<Button pressStyle={compStyles.Button}></Button>
+				<Button
+					pressStyle={compStyles.Button}
+					onPress={() => {
+						navRef.navigate("Main");
+					}}
+				></Button>
 				<Button pressStyle={compStyles.Button}></Button>
 			</Animated.View>
 		</View>
-	)
+	);
 }
 
 const compStyles = StyleSheet.create({
@@ -45,8 +54,8 @@ const compStyles = StyleSheet.create({
 		padding: "1%",
 	},
 	Button: {
-		aspectRatio: 1/1,
+		aspectRatio: 1 / 1,
 		width: "10%",
 		borderRadius: 100,
 	},
-})
+});
