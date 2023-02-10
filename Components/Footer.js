@@ -29,9 +29,7 @@ export default function Footer(props) {
 				<Button pressStyle={compStyles.Button}></Button>
 				<Button
 					pressStyle={compStyles.Button}
-					onPress={() => {
-						navRef.navigate("Main");
-					}}
+					onPress={() => { navRef.navigate("Main")}}
 				></Button>
 				<Button pressStyle={compStyles.Button}></Button>
 			</Animated.View>

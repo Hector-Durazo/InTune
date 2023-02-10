@@ -61,7 +61,7 @@ export default function App() {
           header: () => null
         }} />
       </Stack.Navigator>
-      <Footer showRef={showNav} />
+      <Footer showRef={showNav} navRef={navRef}/>
     </NavigationContainer>
   )
 }
