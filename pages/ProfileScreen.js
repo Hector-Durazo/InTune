@@ -4,30 +4,89 @@ import styles from "../styles/App.component.style.js";
 import { app, auth, db } from "../firebaseConfig.js";
 // Import Components
 import Button from "../components/Button.js";
+import Post from "../components/Post.js";
+import { getPosts } from "../utils/UserData.js";
 
 export default function ProfileScreen() {
 	// Screen Variables, Refs, and Hooks
 	const name = auth.currentUser.displayName;
 	const userName = "@" + auth.currentUser.username;
 
+	const [posts, setPosts] = useState([]);
+
+	useEffect(() => {
+		getPosts(setPosts);
+	}, [setPosts]);
+
+	let postList = posts.map((post, index) => {
+		return <Post key={index} data={post} />;
+	});
+
 	return (
 		// Page Contents
 		<View style={styles.MainView}>
-			<Text style={ScreenStyles.name}>{name}</Text>
-			<Text style={ScreenStyles.username}>{userName}</Text>
-			<Text>{"biography here"}</Text>
+			<Button pressStyle={ScreenStyles.ProfilePic} />
+			<Text style={{ ...ScreenStyles.Name, ...styles.TextLight }}>
+				{name}
+			</Text>
+			<Text style={{ ...ScreenStyles.Username, ...styles.TextLight }}>
+				{userName}
+			</Text>
+			<Text
+				style={{ ...ScreenStyles.SecondaryText, ...styles.TextLight }}
+			>
+				{"biography here"}
+			</Text>
+			<Text
+				style={{ ...ScreenStyles.SecondaryText, ...styles.TextLight }}
+			>
+				{"Number of Friends Here"}
+			</Text>
+			<View style={ScreenStyles.ProfileBody}>
+				<Text
+					style={{ ...ScreenStyles.RecentPost, ...styles.TextLight }}
+				>
+					{"Recent Post:"}
+				</Text>
+				{postList[0]}
+				<Button pressStyle={ScreenStyles.HistoryButton}>
+					{"History"}
+				</Button>
+			</View>
 		</View>
 	);
 }
 
 // Page specific styles
 const ScreenStyles = StyleSheet.create({
-	name: {
-		fontSize: 14,
-		color: "white",
+	ProfilePic: {
+		aspectRatio: 1 / 1,
+		width: "20%",
+		borderRadius: 100,
+		margin: "3%",
+		marginTop: 80,
+		borderWidth: 1,
 	},
-	username: {
+	Name: {
+		fontSize: 16,
+	},
+	Username: {
 		fontStyle: "italic",
 		fontSize: 10,
+	},
+	SecondaryText: {
+		fontStyle: "italic",
+		fontSize: 12,
+	},
+	RecentPost: {
+		textAlign: "left",
+		paddingBottom: 10,
+	},
+	HistoryButton: {
+		alignSelf: "flex-end",
+		borderRadius: 15,
+	},
+	ProfileBody: {
+		paddingTop: 30,
 	},
 });
