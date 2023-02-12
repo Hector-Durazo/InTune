@@ -1,30 +1,16 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback, useContext } from "react";
 import { View, Text, StyleSheet, ScrollView, RefreshControl } from "react-native";
 import { auth } from "../firebaseConfig.js";
 import { styles } from "../styles/App.component.style.js";
 import Button from "../components/Button.js";
 import Post from "../components/Post.js";
 import { subscribeToUserPosts } from "../utils/UserData.js";
-import { useAppState } from "../utils/AppState.js";
+import { AppState } from "../utils/AppState.js";
 
 export default function MainScreen({navigation}) {
 
-	//const [{posts, friends}, dispatch] = useAppState(); - TO ADD. AppState not working
-	const [posts, setPosts] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
-
-	/**
-	 * Subscribe to all friend posts, sort posts by newest, and update posts state.
-	 * UNFINISHED
-	 * @returns Unsubscribe function for subscribed user
-	 */
-	const getPosts = () => {
-		// TODO: Subscribe to and compile friend posts !!!
-		return subscribeToUserPosts(auth.currentUser.uid, (data)=>{
-			setPosts(data);
-			//dispatch({type:'setPosts', posts:postsNewest}) - TO ADD. AppState not working
-		})
-	}
+	const [{posts}, dispatch] = useContext(AppState)
 
 	// Go to LoginScreen on signout
 	auth.onAuthStateChanged((user) => {
@@ -36,14 +22,25 @@ export default function MainScreen({navigation}) {
 		}
 	})
 
-	// Get post data
-	useEffect(()=>{
-		const unsubscribe = getPosts()
-		return () => {
-			unsubscribe()
-		}
-	}, [getPosts])
 
+	// Ref passed to Firebase listener to store post data
+	const postsRef = useRef([]);
+
+	const getPosts = useCallback(() => {
+		// TODO: Subscribe to and compile friend posts !!!
+		return subscribeToUserPosts(auth.currentUser.uid, dispatch)
+	})
+
+	// Subscribe to relevant posts
+
+	// Dispatch posts to global state only if postsRef updates
+	useEffect(()=>{
+		console.log('useEffect Called')
+		const unsubscribe = getPosts()
+		return () => unsubscribe()
+	}, [postsRef, refreshing])
+
+	// Rerender when screen is pulled up
 	const onRefresh = useCallback(() => {
 		setRefreshing(true);
 		setTimeout(()=>{
@@ -75,7 +72,9 @@ export default function MainScreen({navigation}) {
 			pressStyle={{...mainStyles.ShareButton,}} 
 			image={require("../assets/InTune_Logo_Icon.png")}
 			imgStyle={{...mainStyles.ShareButImg,}}
-			onPress={() => navigation.navigate("Share")}
+			onPress={() => {
+				navigation.navigate("Share")
+			}}
 			/>
 		</View>
 	);

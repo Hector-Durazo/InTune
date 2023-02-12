@@ -3,8 +3,6 @@ import { createContext, useContext, useReducer } from "react";
 export const AppState = createContext([{}, function(){}]);
 
 
-// THIS IS ALL BROKEN. Destructring error. Will fix.
-
 const initialState = {
 	posts: [],
 	friends: [],
@@ -37,5 +35,3 @@ export const AppStateProvider = ({children}) => {
 		</AppState.Provider>
 	)
 }
-
-export const useAppState = () => { useContext(AppState) }

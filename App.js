@@ -34,8 +34,8 @@ export default function App() {
     return null;
   }
 
-  //<AppStateProvider> - To add to top level of app
   return (
+    <AppStateProvider>
       <NavigationContainer ref={navRef}>
         <Header showRef={showNav} navRef={navRef} />
         <Stack.Navigator initialRouteName="Intro">
@@ -65,6 +65,7 @@ export default function App() {
         </Stack.Navigator>
         <Footer showRef={showNav} navRef={navRef} />
       </NavigationContainer>
+    </AppStateProvider>
   )
 }
 

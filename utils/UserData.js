@@ -1,5 +1,7 @@
 import { onValue, ref, set, update, get } from "firebase/database";
+import { useContext, useRef } from "react";
 import { app, auth, db } from "../firebaseConfig";
+import { AppState } from "./AppState";
 
 export async function checkNewUser(user) {
 	const userRef = ref(db, 'users/' + user.uid);
@@ -44,12 +46,14 @@ export function addPost(id, data) {
  * @param {function} callback Function that is passed newest posts from user
  * @returns 
  */
-export function subscribeToUserPosts(uid, callback) {
+export function subscribeToUserPosts(uid, dispatch) {
+	console.log('subscribe called')
 	const userRef = ref(db, 'users/' + uid + '/posts');
 	return onValue(userRef, (snapshot) => {
+		console.log('onvalue called')
 		let data = snapshot.val()
 		if(!data) data = []
 		const postsNewest = Object.values(data).reverse()
-		callback(postsNewest)
+		dispatch({type: 'setPosts', posts: postsNewest})
 	})
 }

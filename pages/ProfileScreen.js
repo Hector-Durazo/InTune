@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { Animated, View, StyleSheet, Text } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { styles } from "../styles/App.component.style.js";
@@ -7,26 +7,22 @@ import { app, auth, db } from "../firebaseConfig.js";
 import Button from "../components/Button.js";
 import Post from "../components/Post.js";
 import { subscribeToUserPosts, updateUserData } from "../utils/UserData.js";
+import { AppState } from "../utils/AppState.js";
 
 export default function ProfileScreen() {
 	// Screen Variables, Refs, and Hooks
 	const name = auth.currentUser.displayName;
 	const userName = "@" + auth.currentUser.username;
 
-	const [posts, setPosts] = useState([]);
+	const [{posts}, dispatch] = useContext(AppState)
 	const [image, setImage] = useState(null);
 
 	useEffect(() => {
+		console.log('profile useeffect called')
 		if (auth.currentUser.photoURL) {
 			setImage(auth.currentUser.photoURL)
 		}
-		// doesnt work for some reason. Will replace with global state once AppState works
-		// right now, no post show up
-		let unsub = subscribeToUserPosts(auth.currentUser.uri, (data)=>{
-			setPosts(data)
-		});
-		return () => {unsub()}
-	}, [setPosts, setImage]);
+	}, [setImage]);
 	
 	let postList = posts.map((post, index) => {
 		return <Post key={index} data={post} />;
