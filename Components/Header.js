@@ -1,12 +1,17 @@
-import { useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Pressable, Image, StyleSheet, View, Animated, StatusBar } from "react-native";
 import { styles } from "../styles/App.component.style.js";
 import Button from "./Button.js";
 import { app, auth } from "../firebaseConfig.js";
 import { checkNewUser } from "../utils/UserData.js";
+import { AppState } from '../utils/AppState.js';
 
 export default function Header(props) {
 	const {showRef, navRef} = props
+	
+	const [{friends}, dispatch] = useContext(AppState);
+	let picture = "";
+	if (friends[0]) picture = friends[0].picture
 
 	return(
 		<View style={{...compStyles.Header}}>
@@ -27,7 +32,7 @@ export default function Header(props) {
 					pressStyle={styles.ProfilePicButton}
 					imgStyle={styles.ProfilePicImg}
 					onPress={()=>{navRef.navigate("Profile")}}
-					image={{uri: 'data:image/jpeg;base64,' + "auth.currentUser.photoURL"}}
+					image={{uri: 'data:image/jpeg;base64,' + picture}}
 				></Button>
 
 			</Animated.View>

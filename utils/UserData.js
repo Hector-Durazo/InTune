@@ -1,7 +1,5 @@
 import { onValue, ref, set, update, get } from "firebase/database";
-import { useContext, useRef } from "react";
-import { app, auth, db } from "../firebaseConfig";
-import { AppState } from "./AppState";
+import { auth, db } from "../firebaseConfig";
 
 export async function checkNewUser(user) {
 	const userRef = ref(db, 'users/' + user.uid);
@@ -17,7 +15,7 @@ export async function checkNewUser(user) {
 	return isNew;
 }
 
-export async function getUserData() {
+export async function getUserData(dispatch) {
 	const userRef = ref(db, 'users/' + auth.currentUser.uid);
 	await get(userRef).then( (res) => {
 		if(res.exists()) {
@@ -25,6 +23,7 @@ export async function getUserData() {
 			auth.currentUser.displayName = data.displayName
 			auth.currentUser.username = data.username
 			auth.currentUser.photoURL = data.picture
+			dispatch({type: 'setFriends', friends: [data]})
 		};
 	});
 }

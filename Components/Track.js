@@ -3,6 +3,7 @@ import { View, Pressable, Text, StyleSheet, Image, Animated, TextInput } from "r
 import { styles, colors } from "../styles/App.component.style.js";
 import Button from './Button.js';
 import { addPost } from '../utils/UserData.js';
+import { auth } from "../firebaseConfig";
 
 export default function Track(props) {
 	let { data, selected, onSubmit, variant="search" } = props
@@ -38,6 +39,8 @@ export default function Track(props) {
 
 	async function submit() {
 		var postData = {
+			displayName: auth.currentUser.displayName,
+			username: auth.currentUser.username,
 			postedOn: new Date().getTime(),
 			caption: caption.current,
 			title: data.name,

@@ -1,12 +1,19 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, Animated, Dimensions } from "react-native";
 import { auth } from "../firebaseConfig";
 import { styles, colors } from "../styles/App.component.style.js";
+import { AppState } from '../utils/AppState';
 import Button from './Button.js';
 import Track from './Track';
 
 export default function Post(props) {
 	const { data } = props;
+	const [{friends}, dispatch] = useContext(AppState);
+	let picture = "";
+	const user = friends.find(user => user.username === data.username);
+	if (user && user.picture) picture = user.picture;
+
+	console.log(user)
 
 	var timeText = "";
 	const timeSince = (new Date().getTime() - data.postedOn)/1000;
@@ -21,7 +28,7 @@ export default function Post(props) {
 	}else{
 		const date = new Date()
 		date.setMilliseconds(data.postedOn)
-		timeText = date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
+		timeText = date.getMonth() + '/' + date.getDate() + '/' + date.getUTCFullYear();
 	}
 
 	return (
@@ -34,7 +41,7 @@ export default function Post(props) {
 				<Button 
 					pressStyle={styles.ProfilePicButton}
 					imgStyle={styles.ProfilePicImg}
-					image={{uri: 'data:image/jpeg;base64,' + "1"}}
+					image={{uri: 'data:image/jpeg;base64,' + picture}}
 					/>
 				<View style={compStyles.UserDetails}>
 					<Text style={compStyles.DisplayName}>{auth.currentUser.displayName}</Text>
