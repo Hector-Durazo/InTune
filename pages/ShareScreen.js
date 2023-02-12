@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Animated, View, Text, TextInput, Pressable, StyleSheet, ScrollView } from "react-native";
-import styles from "../styles/App.component.style.js";
+import { styles } from "../styles/App.component.style.js";
 import Button from "../components/Button";
 import Search from "../components/Search";
 import Track from "../components/Track";

@@ -1,20 +1,32 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Animated, View, Text, TextInput, Pressable, StyleSheet, Dimensions, ScrollView } from "react-native";
-import { app, auth, db } from "../firebaseConfig.js";
-import styles from "../styles/App.component.style.js";
+import React, { useRef, useEffect, useState, useCallback } from "react";
+import { View, Text, StyleSheet, ScrollView, RefreshControl } from "react-native";
+import { auth } from "../firebaseConfig.js";
+import { styles } from "../styles/App.component.style.js";
 import Button from "../components/Button.js";
 import Post from "../components/Post.js";
-import { getPosts } from "../utils/UserData.js";
+import { subscribeToUserPosts } from "../utils/UserData.js";
+import { useAppState } from "../utils/AppState.js";
 
 export default function MainScreen({navigation}) {
 
-	const winWidth = Dimensions.get('window').width;
+	//const [{posts, friends}, dispatch] = useAppState(); - TO ADD. AppState not working
 	const [posts, setPosts] = useState([]);
+	const [refreshing, setRefreshing] = useState(false);
 
-	useEffect(()=>{
-		getPosts(setPosts);
-	}, [setPosts])
+	/**
+	 * Subscribe to all friend posts, sort posts by newest, and update posts state.
+	 * UNFINISHED
+	 * @returns Unsubscribe function for subscribed user
+	 */
+	const getPosts = () => {
+		// TODO: Subscribe to and compile friend posts !!!
+		return subscribeToUserPosts(auth.currentUser.uid, (data)=>{
+			setPosts(data);
+			//dispatch({type:'setPosts', posts:postsNewest}) - TO ADD. AppState not working
+		})
+	}
 
+	// Go to LoginScreen on signout
 	auth.onAuthStateChanged((user) => {
 		if(!user) {
 			navigation.reset({
@@ -23,6 +35,23 @@ export default function MainScreen({navigation}) {
 			  })
 		}
 	})
+
+	// Get post data
+	useEffect(()=>{
+		const unsubscribe = getPosts()
+		return () => {
+			unsubscribe()
+		}
+	}, [getPosts])
+
+	const onRefresh = useCallback(() => {
+		setRefreshing(true);
+		setTimeout(()=>{
+			setRefreshing(false);
+		}, 500);
+	}, []);
+
+	
 
 	let postList = posts.map((post, index)  => {
 		return <Post key={index} data={post}/>
@@ -33,6 +62,9 @@ export default function MainScreen({navigation}) {
 			<ScrollView
 			style={mainStyles.PostList}
 			contentContainerStyle={{alignItems: "center"}}
+			refreshControl={
+				<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+			}
 			>
 				<Text style={{...styles.Text, ...styles.TextLight, ...styles.Heading}}>
 					Good Evening

@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { LogBox } from 'react-native';
 import ProfileScreen from './pages/ProfileScreen';
+import { AppStateProvider } from './utils/AppState';
 
 // Main App controller for navigation
 
@@ -33,36 +34,37 @@ export default function App() {
     return null;
   }
 
+  //<AppStateProvider> - To add to top level of app
   return (
-    <NavigationContainer ref={navRef}>
-      <Header showRef={showNav} navRef={navRef}/>
-      <Stack.Navigator initialRouteName="Intro">
-        <Stack.Screen name="Login" component={LoginScreen} initialParams={{ showRef: showNav }} options={{ header: () => null }} />
-        <Stack.Screen name="Main" component={MainScreen} options={{ header: () => null }} />
-        <Stack.Screen name="Share" component={ShareScreen} options={{
-          animation: "slide_from_bottom",
-          title: "Share a Song",
-          cardStyle: {
-            backgroundColor: "transparent"
-          },
-          presentation: "modal",
-          detachPreviousScreen: false,
-          headerStyle: {
-            backgroundColor: "#0F0F0F",
-          },
-          headerTintColor: "#DFDDE4"
-        }} />
-        <Stack.Screen name="Profile" component={ProfileScreen} options={{
-          animation: "slide_from_right",
-          header: () => null
-        }} />
-        <Stack.Screen name="Friend" component={FriendScreen} options={{
-          animation: "slide_from_left",
-          header: () => null
-        }} />
-      </Stack.Navigator>
-      <Footer showRef={showNav} navRef={navRef}/>
-    </NavigationContainer>
+      <NavigationContainer ref={navRef}>
+        <Header showRef={showNav} navRef={navRef} />
+        <Stack.Navigator initialRouteName="Intro">
+          <Stack.Screen name="Login" component={LoginScreen} initialParams={{ showRef: showNav }} options={{ header: () => null }} />
+          <Stack.Screen name="Main" component={MainScreen} options={{ header: () => null }} />
+          <Stack.Screen name="Share" component={ShareScreen} options={{
+            animation: "slide_from_bottom",
+            title: "Share a Song",
+            cardStyle: {
+              backgroundColor: "transparent"
+            },
+            presentation: "modal",
+            detachPreviousScreen: false,
+            headerStyle: {
+              backgroundColor: "#0F0F0F",
+            },
+            headerTintColor: "#DFDDE4"
+          }} />
+          <Stack.Screen name="Profile" component={ProfileScreen} options={{
+            animation: "slide_from_right",
+            header: () => null
+          }} />
+          <Stack.Screen name="Friend" component={FriendScreen} options={{
+            animation: "slide_from_left",
+            header: () => null
+          }} />
+        </Stack.Navigator>
+        <Footer showRef={showNav} navRef={navRef} />
+      </NavigationContainer>
   )
 }
 

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Dimensions, Animated, View, Text, TextInput, Pressable } from "react-native";
-import styles from "../styles/App.component.style.js";
+import { styles } from "../styles/App.component.style.js";
 import Button from "../components/Button.js";
 import PhoneInput from "../components/PhoneInput.js";
 import { auth } from "../firebaseConfig.js";
-import { getUserNames } from "../utils/UserData.js";
+import { getUserData } from "../utils/UserData.js";
 
 export default function LoginScreen({ route, navigation }) {
   const {showRef} = route.params;
@@ -58,7 +58,7 @@ export default function LoginScreen({ route, navigation }) {
   })
 
   function logIn() {
-      getUserNames();
+      getUserData();
       Animated.timing(showRef.current,{
         toValue: 1,
         duration: 500,

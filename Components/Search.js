@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { View, TextInput, StyleSheet, Image } from "react-native";
-import styles from "../styles/App.component.style.js";
+import { styles } from "../styles/App.component.style.js";
 
 
 // Search Bar Component

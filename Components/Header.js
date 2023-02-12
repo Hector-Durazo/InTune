@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { Pressable, Image, StyleSheet, View, Animated } from "react-native";
-import styles from "../styles/App.component.style.js";
+import { Pressable, Image, StyleSheet, View, Animated, StatusBar } from "react-native";
+import { styles } from "../styles/App.component.style.js";
 import Button from "./Button.js";
 import { app, auth } from "../firebaseConfig.js";
 import { checkNewUser } from "../utils/UserData.js";
@@ -10,6 +10,7 @@ export default function Header(props) {
 
 	return(
 		<View style={{...compStyles.Header}}>
+			<StatusBar translucent={true}/>
 			<Animated.View style={{
 				...styles.Row, ...compStyles.HeaderContainer,
 				transform: 
@@ -20,22 +21,15 @@ export default function Header(props) {
 					})
 				}]
 			}}>
+				<View style={styles.ProfilePicButton}/>
+				<Image style={compStyles.Logo} source={require("../assets/InTune_Logo.png")}/>
 				<Button 
-					pressStyle={compStyles.Button}
+					pressStyle={styles.ProfilePicButton}
+					imgStyle={styles.ProfilePicImg}
 					onPress={()=>{navRef.navigate("Profile")}}
+					image={{uri: 'data:image/jpeg;base64,' + "auth.currentUser.photoURL"}}
 				></Button>
-				<Image style={compStyles.Logo} source={require("../assets/InTune_Logo_Icon.png")}/>
-				<Button 
-				pressStyle={compStyles.Button}
-				onPress={()=>{
-					auth.signOut()
-					Animated.timing(showRef.current,{
-						toValue: 0,
-						duration: 500,
-						useNativeDriver: true
-					}).start()
-				}}
-				></Button>
+
 			</Animated.View>
 		</View>
 	)
@@ -43,8 +37,10 @@ export default function Header(props) {
 
 const compStyles = StyleSheet.create({
 	Header: {
+		display: "flex",
+		flexDirection: "column",
 		width: "100%",
-		height: "10%",
+		height: "12%",
 		backgroundColor: "#0F0F0F",
 	},
 	HeaderContainer: {
@@ -54,15 +50,10 @@ const compStyles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "flex-end",
 		paddingVertical: "1%",
-		paddingHorizontal: "4%",
+		paddingHorizontal: "3%",
 	},
 	Logo: {
-		height: 36,
-		width: 32,
-	},
-	Button: {
-		aspectRatio: 1/1,
-		width: "8%",
-		borderRadius: 16
+		height: "60%",
+		width: "35%",
 	},
 })

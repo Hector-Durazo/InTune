@@ -16,10 +16,12 @@ export default function Post(props) {
 		timeText = Math.round(timeSince/60) + " minutes ago";
 	} else if(timeSince < 86400){
 		timeText = Math.round(timeSince/3600) + " hours ago";
-	} else{
+	} else if(timeSince < 86400*8){
+		timeText = Math.round(timeSince/86400) + " days ago";
+	}else{
 		const date = new Date()
 		date.setMilliseconds(data.postedOn)
-		timeText = date.getDate()
+		timeText = date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
 	}
 
 	return (
@@ -29,7 +31,11 @@ export default function Post(props) {
 			}}>
 
 			<View style={compStyles.UserRow}>
-				<Button pressStyle={compStyles.UserPic}/>
+				<Button 
+					pressStyle={styles.ProfilePicButton}
+					imgStyle={styles.ProfilePicImg}
+					image={{uri: 'data:image/jpeg;base64,' + "1"}}
+					/>
 				<View style={compStyles.UserDetails}>
 					<Text style={compStyles.DisplayName}>{auth.currentUser.displayName}</Text>
 					<Text style={{...compStyles.UserName}}>{auth.currentUser.username}</Text>
@@ -61,13 +67,6 @@ const compStyles = StyleSheet.create({
 	},
 	UserRow: {
 		flexDirection: "row"
-	},
-	UserPic: {
-		aspectRatio: 1/1,
-		width: "15%",
-		borderRadius: 100,
-		margin: "3%",
-		borderWidth: 1,
 	},
 	UserDetails: {
 		flexDirection: "column",

@@ -51,5 +51,6 @@ const compStyles = StyleSheet.create({
 		borderRadius: 25,
 		justifyContent: "center",
 		alignItems: "center",
+		overflow: "hidden"
 	}
 })

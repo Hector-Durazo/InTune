@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 // Global style sheet
 
-export default styles = StyleSheet.create({
+export const styles = StyleSheet.create({
 	// Container for screen elements
 	MainView: {
 		display: "flex",
@@ -59,7 +59,20 @@ export default styles = StyleSheet.create({
 	Heading: {
 		fontSize: 28,
 		margin: "2%",
-	},	
+	},
+	ProfilePicImg: {
+		position: "relative",
+		aspectRatio: 1 / 1,
+		height: "175%",
+		overflow: "hidden"
+	},
+	ProfilePicButton: {
+		aspectRatio: 1/1,
+		width: "15%",
+		borderRadius: 100,
+		margin: "3%",
+		borderWidth: 1,
+	},
 });
 
 export const colors = {
