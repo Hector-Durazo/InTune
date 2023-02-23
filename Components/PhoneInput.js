@@ -6,13 +6,13 @@ import { app, auth, db } from "../firebaseConfig.js";
 import { spotifyCredentials, authorizeSpotify } from '../spotifyConfig.js';
 import { checkNewUser, updateUserData } from "../utils/UserData.js";
 import { styles } from "../styles/App.component.style.js";
-import Button from "./Button.js";
+import { Button } from "./Button";
 
 // PhoneInput Component
 // Usage:
 // 		
 
-export default function PhoneInput(props) {
+export const PhoneInput = (props) => {
 	let {loginFade, user, onConfirm} = props;
 
 	const verifier = useRef(null);

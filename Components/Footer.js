@@ -1,13 +1,10 @@
-import { useRef } from "react";
-import { Image, StyleSheet, View, Animated } from "react-native";
+import { StyleSheet, View, Animated } from "react-native";
 import { styles } from "../styles/App.component.style.js";
-import Button from "./Button.js";
-import { app, auth } from "../firebaseConfig.js";
-import { checkNewUser } from "../utils/UserData.js";
+import { Button } from "./Button";
 
 // Footer
 
-export default function Footer(props) {
+export const Footer = (props) => {
 	const { showRef, navRef } = props;
 
 	return (

@@ -7,7 +7,7 @@ import { Pressable, Text, StyleSheet, Image } from "react-native"
 // Usage:
 // 		<Button variant="accent">Button Text</Button>
 
-export default function Button(props) {
+export const Button = (props) => {
 	let {children, onPress, variant="regular", pressStyle={}, textStyle={}, image=null, imgStyle={}} = props;
 	let buttonStyles = {};
 	switch(variant) {

@@ -4,7 +4,7 @@ import { styles } from "../styles/App.component.style.js";
 // Import Components
 import Button from "../components/Button.js";
 
-export default function MainScreen() {
+export function MainScreen() {
 	// Screen Variables, Refs, and Hooks
 
 	return(

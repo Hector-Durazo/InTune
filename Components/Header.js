@@ -1,17 +1,27 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import { Pressable, Image, StyleSheet, View, Animated, StatusBar } from "react-native";
+import { useContext, useEffect } from 'react';
+import { Image, StyleSheet, View, Animated, StatusBar } from "react-native";
 import { styles } from "../styles/App.component.style.js";
-import Button from "./Button.js";
-import { app, auth } from "../firebaseConfig.js";
-import { checkNewUser } from "../utils/UserData.js";
+import { Button } from "./Button";
 import { AppState } from '../utils/AppState.js';
 
-export default function Header(props) {
+export const Header = (props) => {
 	const {showRef, navRef} = props
 	
-	const [{friends}, dispatch] = useContext(AppState);
+	const [{friends, page}, dispatch] = useContext(AppState);
+	
 	let picture = "";
 	if (friends[0]) picture = friends[0].picture
+
+	useEffect(() => {
+		const unsubNav = navRef.addListener('state', (e) => {
+			const state = e.data.state;
+			const ind = state?.index;
+			if(ind !== undefined) dispatch({type: 'setPage', page: state.routes[ind].name})
+			
+			
+		})
+		return () => unsubNav()
+	}, [navRef])
 
 	return(
 		<View style={{...compStyles.Header}}>
@@ -28,12 +38,24 @@ export default function Header(props) {
 			}}>
 				<View style={styles.ProfilePicButton}/>
 				<Image style={compStyles.Logo} source={require("../assets/InTune_Logo.png")}/>
-				<Button 
-					pressStyle={styles.ProfilePicButton}
-					imgStyle={styles.ProfilePicImg}
-					onPress={()=>{navRef.navigate("Profile")}}
-					image={{uri: 'data:image/jpeg;base64,' + picture}}
-				></Button>
+				{
+					{
+						"picture": 
+							(<Button 
+							pressStyle={styles.ProfilePicButton}
+							imgStyle={styles.ProfilePicImg}
+							onPress={()=>{navRef.navigate("Profile")}}
+							image={{uri: 'data:image/jpeg;base64,' + picture}}/>),
+					
+						"settings": 
+							(<Button 
+							pressStyle={styles.ProfilePicButton}
+							imgStyle={compStyles.SettingsPic}
+							onPress={()=>{navRef.navigate("Profile")}}
+							image={require("../assets/settings.png")}/>)
+					}[page == "Profile" ? "settings" : "picture"]
+				}
+				
 
 			</Animated.View>
 		</View>
@@ -61,4 +83,9 @@ const compStyles = StyleSheet.create({
 		height: "60%",
 		width: "35%",
 	},
+	SettingsPic: {
+		width: "170%",
+		height: "170%",
+		backgroundColor: "black"
+	}
 })

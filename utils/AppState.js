@@ -6,6 +6,7 @@ export const AppState = createContext([{}, function(){}]);
 const initialState = {
 	posts: [],
 	friends: [],
+	page: "",
 }
 
 const reducer = (state, action) => {
@@ -20,6 +21,12 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				friends: action.friends
+			}
+		}
+		case 'setPage': {
+			return {
+				...state,
+				page: action.page
 			}
 		}
 		default: {

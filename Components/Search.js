@@ -2,11 +2,9 @@ import { useRef } from 'react';
 import { View, TextInput, StyleSheet, Image } from "react-native";
 import { styles } from "../styles/App.component.style.js";
 
-
 // Search Bar Component
 
-
-export default function Search(props) {
+export const Search = (props) => {
 	let {onChange, placeholder} = props;
 
 	const token = useRef(null);

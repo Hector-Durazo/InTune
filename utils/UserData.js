@@ -46,10 +46,8 @@ export function addPost(id, data) {
  * @returns 
  */
 export function subscribeToUserPosts(uid, dispatch) {
-	console.log('subscribe called')
 	const userRef = ref(db, 'users/' + uid + '/posts');
 	return onValue(userRef, (snapshot) => {
-		console.log('onvalue called')
 		let data = snapshot.val()
 		if(!data) data = []
 		const postsNewest = Object.values(data).reverse()

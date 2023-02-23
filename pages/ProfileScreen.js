@@ -4,12 +4,11 @@ import * as ImagePicker from 'expo-image-picker';
 import { styles } from "../styles/App.component.style.js";
 import { app, auth, db } from "../firebaseConfig.js";
 // Import Components
-import Button from "../components/Button.js";
-import Post from "../components/Post.js";
-import { subscribeToUserPosts, updateUserData } from "../utils/UserData.js";
+import { Button, Post } from "../components/";
+import { updateUserData } from "../utils/UserData.js";
 import { AppState } from "../utils/AppState.js";
 
-export default function ProfileScreen() {
+export const ProfileScreen = () => {
 	// Screen Variables, Refs, and Hooks
 	const name = auth.currentUser.displayName;
 	const userName = "@" + auth.currentUser.username;
@@ -93,7 +92,7 @@ const ScreenStyles = StyleSheet.create({
 		width: "40%",
 		borderRadius: 100,
 		margin: "3%",
-		marginTop: 80,
+		marginTop: "10%",
 		borderWidth: 1,
 	},
 	ProfilePicImg: {

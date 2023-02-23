@@ -5,7 +5,7 @@ import Button from './Button.js';
 import { addPost } from '../utils/UserData.js';
 import { auth } from "../firebaseConfig";
 
-export default function Track(props) {
+export function Track(props) {
 	let { data, selected, onSubmit, variant="search" } = props
 	const slide = useRef(new Animated.Value(0)).current
 	const height = slide.interpolate({
@@ -18,7 +18,6 @@ export default function Track(props) {
 	function select() {
 		if(variant!="search") return;
 		// Slide currently selected track back to default.
-		console.log(height)
 		if(selected.current) {
 			Animated.timing(selected.current, {
 				toValue: 0,

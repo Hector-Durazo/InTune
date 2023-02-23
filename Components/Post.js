@@ -3,17 +3,15 @@ import { View, Text, TextInput, StyleSheet, Animated, Dimensions } from "react-n
 import { auth } from "../firebaseConfig";
 import { styles, colors } from "../styles/App.component.style.js";
 import { AppState } from '../utils/AppState';
-import Button from './Button.js';
-import Track from './Track';
+import { Button } from './Button';
+import { Track } from './Track';
 
-export default function Post(props) {
+export const Post = (props) => {
 	const { data } = props;
 	const [{friends}, dispatch] = useContext(AppState);
 	let picture = "";
 	const user = friends.find(user => user.username === data.username);
 	if (user && user.picture) picture = user.picture;
-
-	console.log(user)
 
 	var timeText = "";
 	const timeSince = (new Date().getTime() - data.postedOn)/1000;
