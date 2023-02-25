@@ -1,13 +1,15 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { Dimensions, Animated, View, Text, TextInput, Pressable } from "react-native";
-import styles from "../styles/App.component.style.js";
-import Button from "../components/Button.js";
-import PhoneInput from "../components/PhoneInput.js";
+import { styles } from "../styles/App.component.style.js";
+import { Button, PhoneInput } from "../components";
 import { auth } from "../firebaseConfig.js";
-import { getUserNames } from "../utils/UserData.js";
+import { getUserData } from "../utils/UserData.js";
+import { AppState } from "../utils/AppState.js";
 
-export default function LoginScreen({ route, navigation }) {
+export const LoginScreen = ({ route, navigation }) => {
   const {showRef} = route.params;
+
+  const [{friends}, dispatch] = useContext(AppState);
 
   // Animations
   const logoFade = useRef(new Animated.Value(0)).current
@@ -58,7 +60,7 @@ export default function LoginScreen({ route, navigation }) {
   })
 
   function logIn() {
-      getUserNames();
+      getUserData(dispatch);
       Animated.timing(showRef.current,{
         toValue: 1,
         duration: 500,
@@ -70,6 +72,7 @@ export default function LoginScreen({ route, navigation }) {
       })
   }
 
+  // Listens for authorization and logs in
   auth.onAuthStateChanged((user) => {
     if((user) && (user.displayName)) {
       setTimeout(() => {logIn();}, 800)

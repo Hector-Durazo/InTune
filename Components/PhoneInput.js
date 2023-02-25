@@ -5,14 +5,14 @@ import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
 import { app, auth, db } from "../firebaseConfig.js";
 import { spotifyCredentials, authorizeSpotify } from '../spotifyConfig.js';
 import { checkNewUser, updateUserData } from "../utils/UserData.js";
-import styles from "../styles/App.component.style.js";
-import Button from "./Button.js";
+import { styles } from "../styles/App.component.style.js";
+import { Button } from "./Button";
 
 // PhoneInput Component
 // Usage:
 // 		
 
-export default function PhoneInput(props) {
+export const PhoneInput = (props) => {
 	let {loginFade, user, onConfirm} = props;
 
 	const verifier = useRef(null);
@@ -38,9 +38,17 @@ export default function PhoneInput(props) {
 
 	async function sendCode() {
 		try{
-			const provider = new PhoneAuthProvider(auth);
-			const phoneNumber = ""+ext.current+phoneNo.current;
+			let phoneNumber = ""+ext.current+phoneNo.current;
 			console.log(phoneNumber)
+
+			auth.settings.appVerificationDisabledForTesting = false;
+			// FOR DEV TESTING - REMOVE ON PRODUCTION
+			if (phoneNumber == "+1null" || phoneNumber == "+1"){
+				phoneNumber = "+10123456789"
+			}
+			
+
+			const provider = new PhoneAuthProvider(auth);
 			verifId.current = await provider.verifyPhoneNumber(phoneNumber, verifier.current);
 
 			//If successfully sent code
@@ -53,6 +61,10 @@ export default function PhoneInput(props) {
 
 	async function confirmCode() {
 		try {
+			if (verifCode.current == null) {
+				verifCode.current = "123456"
+			}
+
 			const credential = PhoneAuthProvider.credential(verifId.current, verifCode.current);
 			user.current = await signInWithCredential(auth, credential);
 			// If existing user, log in
@@ -69,7 +81,6 @@ export default function PhoneInput(props) {
 
 	function linkSpotify() {
 		if( (dispName.current == "") || (username.current == "")) return;
-		console.log(user.current.user.uid)
 		updateUserData(user.current.user, {
 			displayName: dispName.current,
 			username: username.current,
@@ -115,7 +126,6 @@ export default function PhoneInput(props) {
 				variant="accent" 
 				pressStyle={compStyles.Button}
 				onPress={sendCode}
-				//onPress={slideInput}
 				>Continue
 				</Button>
 			</View>

@@ -1,4 +1,7 @@
 export default {
+	"android": {
+		"softwareKeyboardLayoutMode": "pan"
+	},
 	"plugins": [
 		[
 			"expo-build-properties",
@@ -6,7 +9,7 @@ export default {
 				"ios": {
 					"useFrameworks": "static"
 				}
-			}
+			},
 		]
 	]
 }

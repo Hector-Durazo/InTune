@@ -1,5 +1,5 @@
 import { onValue, ref, set, update, get } from "firebase/database";
-import { app, auth, db } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 
 export async function checkNewUser(user) {
 	const userRef = ref(db, 'users/' + user.uid);
@@ -8,7 +8,6 @@ export async function checkNewUser(user) {
 		if(res.exists()) {
 			isNew = false
 			const data = res.val()
-			console.log(data)
 			auth.currentUser.displayName = res.val().displayName
 			auth.currentUser.username = res.val().username
 		};
@@ -16,18 +15,20 @@ export async function checkNewUser(user) {
 	return isNew;
 }
 
-export async function getUserNames() {
+export async function getUserData(dispatch) {
 	const userRef = ref(db, 'users/' + auth.currentUser.uid);
 	await get(userRef).then( (res) => {
 		if(res.exists()) {
 			const data = res.val()
-			console.log(data)
 			auth.currentUser.displayName = data.displayName
 			auth.currentUser.username = data.username
+			auth.currentUser.photoURL = data.picture
+			dispatch({type: 'setFriends', friends: [data]})
 		};
 	});
 }
 
+// Pass user from auth and data object
 export function updateUserData(user, data) {
 	const userRef = ref(db, 'users/' + user.uid);
 	update(userRef, data);
@@ -38,11 +39,18 @@ export function addPost(id, data) {
 	update(userRef, data)
 }
 
-export function getPosts(setPosts) {
-	const userRef = ref(db, 'users/' + auth.currentUser.uid + '/posts');
-	onValue(userRef, (snapshot) => {
-		const data = snapshot.val();
-		if(data == null) return;
-		setPosts(Object.values(data).reverse());
+/**
+ * 
+ * @param {string} uid User UID to subscribe to
+ * @param {function} callback Function that is passed newest posts from user
+ * @returns 
+ */
+export function subscribeToUserPosts(uid, dispatch) {
+	const userRef = ref(db, 'users/' + uid + '/posts');
+	return onValue(userRef, (snapshot) => {
+		let data = snapshot.val()
+		if(!data) data = []
+		const postsNewest = Object.values(data).reverse()
+		dispatch({type: 'setPosts', posts: postsNewest})
 	})
 }

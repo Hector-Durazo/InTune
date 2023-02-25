@@ -1,49 +1,75 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Animated, View, Text, TextInput, Pressable, StyleSheet, Dimensions, ScrollView } from "react-native";
-import { app, auth, db } from "../firebaseConfig.js";
-import styles from "../styles/App.component.style.js";
-import Button from "../components/Button.js";
-import Post from "../components/Post.js";
-import { getPosts } from "../utils/UserData.js";
+import React, { useRef, useEffect, useState, useCallback, useContext } from "react";
+import { View, Text, StyleSheet, ScrollView, RefreshControl } from "react-native";
+import { auth } from "../firebaseConfig.js";
+import { styles } from "../styles/App.component.style.js";
+import { Button, Post } from "../components";
+import { subscribeToUserPosts } from "../utils/UserData.js";
+import { AppState } from "../utils/AppState.js";
 
-export default function MainScreen({navigation}) {
+export function MainScreen({ navigation }) {
 
-	const winWidth = Dimensions.get('window').width;
-	const [posts, setPosts] = useState([]);
+	const [refreshing, setRefreshing] = useState(false);
+	const [{ posts }, dispatch] = useContext(AppState)
 
-	useEffect(()=>{
-		getPosts(setPosts);
-	}, [setPosts])
-
+	// Go to LoginScreen on signout
 	auth.onAuthStateChanged((user) => {
-		if(!user) {
+		if (!user) {
 			navigation.reset({
 				index: 0,
-				routes: [{name: "Login"}]
-			  })
+				routes: [{ name: "Login" }]
+			})
 		}
 	})
 
-	let postList = posts.map((post, index)  => {
-		return <Post key={index} data={post}/>
+
+	// Ref passed to Firebase listener to store post data
+	const postsRef = useRef([]);
+
+	const getPosts = useCallback(() => {
+		// TODO: Subscribe to and compile friend posts !!!
+		return subscribeToUserPosts(auth.currentUser.uid, dispatch)
+	})
+
+	// Subscribe to relevant posts
+	// Dispatch posts to global state only if postsRef updates
+	useEffect(() => {
+		console.debug('Fetching Posts')
+		const unsubscribe = getPosts()
+		return () => unsubscribe()
+	}, [postsRef, refreshing])
+
+	// Rerender when screen is pulled up
+	const onRefresh = useCallback(() => {
+		setRefreshing(true);
+		setTimeout(() => {
+			setRefreshing(false);
+		}, 500);
+	}, []);
+
+	let postList = posts.map((post, index) => {
+		return <Post key={index} data={post} />
 	});
 
-	return(
+	return (
 		<View style={styles.MainView}>
 			<ScrollView
-			style={mainStyles.PostList}
-			contentContainerStyle={{alignItems: "center"}}
-			>
-				<Text style={{...styles.Text, ...styles.TextLight, ...styles.Heading}}>
+				style={mainStyles.PostList}
+				contentContainerStyle={{ alignItems: "center" }}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}>
+				<Text style={{ ...styles.Text, ...styles.TextLight, ...styles.Heading }}>
 					Good Evening
 				</Text>
 				{postList}
 			</ScrollView>
-			<Button 
-			pressStyle={{...mainStyles.ShareButton,}} 
-			image={require("../assets/InTune_Logo_Icon.png")}
-			imgStyle={{...mainStyles.ShareButImg,}}
-			onPress={() => navigation.navigate("Share")}
+			<Button
+				pressStyle={{ ...mainStyles.ShareButton, }}
+				image={require("../assets/InTune_Logo_Icon.png")}
+				imgStyle={{ ...mainStyles.ShareButImg, }}
+				onPress={() => {
+					navigation.navigate("Share")
+				}}
 			/>
 		</View>
 	);
@@ -54,20 +80,20 @@ const mainStyles = StyleSheet.create({
 		position: "absolute",
 		bottom: 20,
 		right: 20,
-		aspectRatio: 1/1,
+		aspectRatio: 1 / 1,
 		width: "20%",
 		borderRadius: 100,
 		paddingHorizontal: "55%",
 	},
 	ShareButImg: {
 		position: "relative",
-		aspectRatio: .90/1,
+		aspectRatio: .90 / 1,
 		height: "60%",
 	},
 	PostList: {
 		display: "flex",
 		width: "100%",
 		height: "100%",
-		
+
 	}
 })

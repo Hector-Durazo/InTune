@@ -1,15 +1,29 @@
-import { useRef } from 'react';
-import { Pressable, Image, StyleSheet, View, Animated } from "react-native";
-import styles from "../styles/App.component.style.js";
-import Button from "./Button.js";
-import { app, auth } from "../firebaseConfig.js";
-import { checkNewUser } from "../utils/UserData.js";
+import { useContext, useEffect } from 'react';
+import { Image, StyleSheet, View, Animated, StatusBar } from "react-native";
+import { styles } from "../styles/App.component.style.js";
+import { Button } from "./Button";
+import { AppState } from '../utils/AppState.js';
 
-export default function Header(props) {
-	const {showRef} = props
+export const Header = (props) => {
+	const {showRef, navRef} = props
+	
+	const [{friends, page}, dispatch] = useContext(AppState);
+	
+	let picture = "";
+	if (friends[0]) picture = friends[0].picture
+
+	useEffect(() => {
+		const unsubNav = navRef.addListener('state', (e) => {
+			const state = e.data.state;
+			const ind = state?.index;
+			if(ind !== undefined) dispatch({type: 'setPage', page: state.routes[ind].name})
+		})
+		return () => unsubNav()
+	}, [navRef])
 
 	return(
 		<View style={{...compStyles.Header}}>
+			<StatusBar translucent={true}/>
 			<Animated.View style={{
 				...styles.Row, ...compStyles.HeaderContainer,
 				transform: 
@@ -20,19 +34,27 @@ export default function Header(props) {
 					})
 				}]
 			}}>
-				<Button pressStyle={compStyles.Button}></Button>
-				<Image style={compStyles.Logo} source={require("../assets/InTune_Logo_Icon.png")}/>
-				<Button 
-				pressStyle={compStyles.Button}
-				onPress={()=>{
-					auth.signOut()
-					Animated.timing(showRef.current,{
-						toValue: 0,
-						duration: 500,
-						useNativeDriver: true
-					}).start()
-				}}
-				></Button>
+				<View style={styles.ProfilePicButton}/>
+				<Image style={compStyles.Logo} source={require("../assets/InTune_Logo.png")}/>
+				{
+					{
+						"picture": 
+							(<Button 
+							pressStyle={styles.ProfilePicButton}
+							imgStyle={styles.ProfilePicImg}
+							onPress={()=>{navRef.navigate("Profile")}}
+							image={{uri: 'data:image/jpeg;base64,' + picture}}/>),
+					
+						"settings": 
+							(<Button 
+							pressStyle={styles.ProfilePicButton}
+							imgStyle={compStyles.SettingsPic}
+							onPress={()=>{navRef.navigate("Profile")}}
+							image={require("../assets/settings.png")}/>)
+					}[page == "Profile" ? "settings" : "picture"]
+				}
+				
+
 			</Animated.View>
 		</View>
 	)
@@ -40,8 +62,10 @@ export default function Header(props) {
 
 const compStyles = StyleSheet.create({
 	Header: {
+		display: "flex",
+		flexDirection: "column",
 		width: "100%",
-		height: "10%",
+		height: "12%",
 		backgroundColor: "#0F0F0F",
 	},
 	HeaderContainer: {
@@ -51,15 +75,15 @@ const compStyles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "flex-end",
 		paddingVertical: "1%",
-		paddingHorizontal: "4%",
+		paddingHorizontal: "3%",
 	},
 	Logo: {
-		height: 36,
-		width: 32,
+		height: "60%",
+		width: "35%",
 	},
-	Button: {
-		aspectRatio: 1/1,
-		width: "8%",
-		borderRadius: 16
-	},
+	SettingsPic: {
+		width: "170%",
+		height: "170%",
+		backgroundColor: "black"
+	}
 })

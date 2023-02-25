@@ -1,12 +1,17 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, Animated, Dimensions } from "react-native";
 import { auth } from "../firebaseConfig";
 import { styles, colors } from "../styles/App.component.style.js";
-import Button from './Button.js';
-import Track from './Track';
+import { AppState } from '../utils/AppState';
+import { Button } from './Button';
+import { Track } from './Track';
 
-export default function Post(props) {
+export const Post = (props) => {
 	const { data } = props;
+	const [{friends}, dispatch] = useContext(AppState);
+	let picture = "";
+	const user = friends.find(user => user.username === data.username);
+	if (user && user.picture) picture = user.picture;
 
 	var timeText = "";
 	const timeSince = (new Date().getTime() - data.postedOn)/1000;
@@ -16,10 +21,12 @@ export default function Post(props) {
 		timeText = Math.round(timeSince/60) + " minutes ago";
 	} else if(timeSince < 86400){
 		timeText = Math.round(timeSince/3600) + " hours ago";
-	} else{
+	} else if(timeSince < 86400*8){
+		timeText = Math.round(timeSince/86400) + " days ago";
+	}else{
 		const date = new Date()
 		date.setMilliseconds(data.postedOn)
-		timeText = date.getDate()
+		timeText = date.getMonth() + '/' + date.getDate() + '/' + date.getUTCFullYear();
 	}
 
 	return (
@@ -29,7 +36,11 @@ export default function Post(props) {
 			}}>
 
 			<View style={compStyles.UserRow}>
-				<Button pressStyle={compStyles.UserPic}/>
+				<Button 
+					pressStyle={styles.ProfilePicButton}
+					imgStyle={styles.ProfilePicImg}
+					image={{uri: 'data:image/jpeg;base64,' + picture}}
+					/>
 				<View style={compStyles.UserDetails}>
 					<Text style={compStyles.DisplayName}>{auth.currentUser.displayName}</Text>
 					<Text style={{...compStyles.UserName}}>{auth.currentUser.username}</Text>
@@ -61,13 +72,6 @@ const compStyles = StyleSheet.create({
 	},
 	UserRow: {
 		flexDirection: "row"
-	},
-	UserPic: {
-		aspectRatio: 1/1,
-		width: "15%",
-		borderRadius: 100,
-		margin: "3%",
-		borderWidth: 1,
 	},
 	UserDetails: {
 		flexDirection: "column",

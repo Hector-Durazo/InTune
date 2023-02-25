@@ -1,24 +1,23 @@
-import { useEffect, useRef } from 'react';
-import { View, Pressable, Text, StyleSheet, Image, Animated, Dimensions, TextInput, NativeModules } from "react-native";
+import { useRef } from 'react';
+import { View, Pressable, Text, StyleSheet, Image, Animated, TextInput } from "react-native";
 import { styles, colors } from "../styles/App.component.style.js";
 import Button from './Button.js';
 import { addPost } from '../utils/UserData.js';
+import { auth } from "../firebaseConfig";
 
-export default function Track(props) {
+export function Track(props) {
 	let { data, selected, onSubmit, variant="search" } = props
-
-	const winWidth = Dimensions.get('window').width;
-
 	const slide = useRef(new Animated.Value(0)).current
 	const height = slide.interpolate({
-		inputRange: [0,1,2],
-		outputRange: [winWidth*.2, winWidth*.48, winWidth*.8]
+		inputRange: [0,1],
+		outputRange: ['3%', '8%']
 	});
 
 	const caption = useRef("");
 
 	function select() {
 		if(variant!="search") return;
+		// Slide currently selected track back to default.
 		if(selected.current) {
 			Animated.timing(selected.current, {
 				toValue: 0,
@@ -27,6 +26,7 @@ export default function Track(props) {
 			}).start()
 		}
 		
+		// Set new selected track
 		selected.current = slide;
 		Animated.timing(slide, {
 			toValue: 1,
@@ -38,6 +38,8 @@ export default function Track(props) {
 
 	async function submit() {
 		var postData = {
+			displayName: auth.currentUser.displayName,
+			username: auth.currentUser.username,
 			postedOn: new Date().getTime(),
 			caption: caption.current,
 			title: data.name,
@@ -78,9 +80,6 @@ export default function Track(props) {
 			height: variant == "search" ? height : "45%"
 			}}>
 			<Pressable 
-			// style={{
-				
-			// }}
 			onPress={select}
 			>
 				<View style={{...compStyles.Row, }}>
@@ -93,7 +92,10 @@ export default function Track(props) {
 				
 			</Pressable>
 			{ variant == "search" ?
-			<Animated.View style={{...compStyles.Selected}}>
+			<Animated.View style={{
+				...compStyles.Selected,
+				height: height == "3%" ? '0%' : '75%'
+				}}>
 					<TextInput 
 					style={compStyles.CaptionText}
 					placeholder="Add a Caption..."
