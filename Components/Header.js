@@ -17,8 +17,6 @@ export const Header = (props) => {
 			const state = e.data.state;
 			const ind = state?.index;
 			if(ind !== undefined) dispatch({type: 'setPage', page: state.routes[ind].name})
-			
-			
 		})
 		return () => unsubNav()
 	}, [navRef])
