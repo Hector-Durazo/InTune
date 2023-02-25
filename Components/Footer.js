@@ -23,7 +23,7 @@ export const Footer = (props) => {
 					],
 				}}
 			>
-				<Button pressStyle={compStyles.Button} onPress={() => { navRef.navigate("Friend")}}></Button>
+				<Button pressStyle={compStyles.Button} onPress={() => { navRef.navigate("Search")}}></Button>
 				<Button
 					pressStyle={compStyles.Button}
 					onPress={() => { navRef.navigate("Main")}}
