@@ -14,7 +14,7 @@ export const SearchScreen = () => {
 			onChange={async (text)=>{
 				// search friends asynchronmous method here
 			}}/>
-			<ScrollView contentContainerStyle={ScreenStyles.Scroll}>
+			<ScrollView contentContainerStyle={styles.Scroll}>
 				<Text style={{...styles.TextLight }}>
 					{"Hello"}
 				</Text>
@@ -35,7 +35,5 @@ export const SearchScreen = () => {
 
 // Page specific styles
 const ScreenStyles = StyleSheet.create({
-	Scroll: {
-		alignItems: "center"
-	},
+
 })

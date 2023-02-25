@@ -47,14 +47,12 @@ export const Header = (props) => {
 					
 						"settings": 
 							(<Button 
-							pressStyle={styles.ProfilePicButton}
+							pressStyle={compStyles.SettingsButton}
 							imgStyle={compStyles.SettingsPic}
 							onPress={()=>{navRef.navigate("Settings")}}
 							image={require("../assets/settings.png")}/>)
-					}[page == "Profile" ? "settings" : "picture"]
+					}[['Profile', 'Settings'].includes(page) ? "settings" : "picture"]
 				}
-				
-
 			</Animated.View>
 		</View>
 	)
@@ -81,9 +79,15 @@ const compStyles = StyleSheet.create({
 		height: "60%",
 		width: "35%",
 	},
+	SettingsButton: {
+		width: "15%",
+		aspectRatio: 1 / 1,
+		backgroundColor: "black",
+		margin: "3%",
+	},
 	SettingsPic: {
-		width: "175%",
-		height: "175%",
+		width: "110%",
+		height: "110%",
 		backgroundColor: "black",
 		borderRadius: 100
 	}
