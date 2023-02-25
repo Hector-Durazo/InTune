@@ -3,15 +3,21 @@ import { styles, colors } from "../styles/App.component.style.js";
 
 export const Friend = (props) => {
     // don't know what props yet
-
+    // potential props: 
     // TODO: add friend image, add friend name/username
     return (
         <Animated.View style={{...compStyles.Container}}>
             <Pressable>
                 <View style={{...compStyles.Row}}>
-                    <Text style={{...compStyles.Text}}>
-                        {"Hello World"}
-                    </Text>
+                    <Image style = {styles.ProfilePicButton} source={require("../assets/generic_profile.png")}/>
+                    <View style={compStyles.Column}>
+                        <Text style={{...compStyles.Name}}>
+                            {"Hello World"}
+                        </Text>
+                        <Text style={{...compStyles.Username}}>
+                            {"helloworld"}
+                        </Text>
+                    </View>
                 </View>
             </Pressable>
         </Animated.View>
@@ -38,11 +44,23 @@ const compStyles = StyleSheet.create({
     },
     Row: {
 		flexDirection: "row",
-		alignItems: "center"
+		alignItems: "center",
 	},
-    Text: {
-		flex: 0,
-		width: "100%",
-		color: colors.BlackSm
+    Column: {
+		flexDirection: "column",
+        width: "70%",
+		alignItems: "flex-start"
+	},
+    Name: {
+        alignSelf: "flex-start",
+		color: colors.BlackSm,
+        fontSize: 15,
+        
+	},
+    Username: {
+        alignSelf: "flex-start",
+		color: colors.BlackSm,
+
+        fontSize: 10,
 	},
 })
