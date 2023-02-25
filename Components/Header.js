@@ -51,7 +51,7 @@ export const Header = (props) => {
 							(<Button 
 							pressStyle={styles.ProfilePicButton}
 							imgStyle={compStyles.SettingsPic}
-							onPress={()=>{navRef.navigate("Profile")}}
+							onPress={()=>{navRef.navigate("Settings")}}
 							image={require("../assets/settings.png")}/>)
 					}[page == "Profile" ? "settings" : "picture"]
 				}

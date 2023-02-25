@@ -58,7 +58,7 @@ export default function App() {
           }} />
           <Stack.Screen name="Settings" component={SettingsScreen} options={{
             animation: "slide_from_bottom",
-            title: "Share a Song",
+            title: "Settings",
             cardStyle: {
               backgroundColor: "transparent"
             },
