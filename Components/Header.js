@@ -82,8 +82,9 @@ const compStyles = StyleSheet.create({
 		width: "35%",
 	},
 	SettingsPic: {
-		width: "170%",
-		height: "170%",
-		backgroundColor: "black"
+		width: "175%",
+		height: "175%",
+		backgroundColor: "black",
+		borderRadius: 100
 	}
 })

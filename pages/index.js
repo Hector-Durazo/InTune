@@ -3,4 +3,4 @@ export {MainScreen} from './MainScreen';
 export {ShareScreen} from './ShareScreen';
 export {ProfileScreen} from './ProfileScreen';
 export {SettingsScreen} from './SettingsScreen';
-export {FriendScreen} from './FriendScreen';
+export {SearchScreen} from './SearchScreen';

@@ -12,6 +12,6 @@ export const SettingsScreen = ({ navigation }) => {
 	);
 }
 
-const ShareStyles = StyleSheet.create({
+const PageStyles = StyleSheet.create({
 	
 })
