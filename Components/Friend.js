@@ -1,25 +1,24 @@
 import { View, Pressable, Text, StyleSheet, Image, Animated, TextInput } from "react-native";
 import { styles, colors } from "../styles/App.component.style.js";
+import { Button } from './Button';
 
 export const Friend = (props) => {
-    // don't know what props yet
-    // potential props: 
-    // TODO: add friend image, add friend name/username
+    
+    const { data } = props
+
     return (
         <Animated.View style={{...compStyles.Container}}>
-            <Pressable>
-                <View style={{...compStyles.Row}}>
-                    <Image style = {styles.ProfilePicButton} source={require("../assets/generic_profile.png")}/>
-                    <View style={compStyles.Column}>
-                        <Text style={{...compStyles.Name}}>
-                            {"Hello World"}
-                        </Text>
-                        <Text style={{...compStyles.Username}}>
-                            {"helloworld"}
-                        </Text>
-                    </View>
+            <Button pressStyle={{...compStyles.Row}} variant={"nostyle"}>
+                <Image style = {compStyles.ProfilePicButton} source={{uri: 'data:image/jpeg;base64,' + data.picture}}/>
+                <View style={compStyles.Column}>
+                    <Text style={{...compStyles.Name}}>
+                        {data.displayName}
+                    </Text>
+                    <Text style={{...compStyles.Username}}>
+                        {data.username}
+                    </Text>
                 </View>
-            </Pressable>
+            </Button>
         </Animated.View>
     )
 }
@@ -29,6 +28,7 @@ const compStyles = StyleSheet.create({
     // TODO: update css
     Container: {
         width: "95%",
+        height: "75%",
         backgroundColor: colors.WhiteGb,
         borderRadius: 25,
 		marginBottom: 5,
@@ -47,6 +47,7 @@ const compStyles = StyleSheet.create({
 		alignItems: "center",
 	},
     Column: {
+        display: "flex",
 		flexDirection: "column",
         width: "70%",
 		alignItems: "flex-start"
@@ -63,4 +64,11 @@ const compStyles = StyleSheet.create({
 
         fontSize: 10,
 	},
+    ProfilePicButton: {
+        aspectRatio: 1 / 1,
+        height: 65,
+        borderRadius: 100,
+        borderWidth: 1,
+        marginRight: "2%",
+    }
 })

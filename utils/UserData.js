@@ -1,4 +1,8 @@
-import { onValue, ref, set, update, get } from "firebase/database";
+import { 	
+	onValue, ref, set, update, get, query, 
+	orderByChild, startAt, endAt, limitToFirst,
+	onChildAdded
+		} from "firebase/database";
 import { auth, db } from "../firebaseConfig";
 
 export async function checkNewUser(user) {
@@ -53,4 +57,15 @@ export function subscribeToUserPosts(uid, dispatch) {
 		const postsNewest = Object.values(data).reverse()
 		dispatch({type: 'setPosts', posts: postsNewest})
 	})
+}
+
+export function queryUsers(search) {
+	console.log(search)
+	const queryRef = query(ref(db, 'users'), orderByChild('username'), startAt(search), limitToFirst(1))
+	const results = []
+	onChildAdded(queryRef, (snapshot) => {
+		console.log("query called")
+		results.push(snapshot.val())
+	}, (error) => { console.log(error) })
+	return results;
 }

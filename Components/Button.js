@@ -23,6 +23,8 @@ export const Button = (props) => {
 				color: "#DFDDE4",
 			}
 			break;
+		case "nostyle":
+			compStyles.Button = {}
 	}
 	return (
 		<Pressable onPress={onPress} style={({pressed})=>[
