@@ -1,7 +1,7 @@
 export default {
-	"android": {
-		"softwareKeyboardLayoutMode": "pan"
-	},
+	// "android": {
+	// 	"softwareKeyboardLayoutMode": "pan"
+	// },
 	"plugins": [
 		[
 			"expo-build-properties",

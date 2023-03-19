@@ -6,7 +6,7 @@ import { useFonts, Inter_400Regular } from '@expo-google-fonts/inter';
 import { registerRootComponent } from "expo";
 import { Header, Footer } from './components/index';
 import { LoginScreen, MainScreen, ShareScreen, 
-        ProfileScreen, SettingsScreen, FriendScreen } from './pages/index';
+        ProfileScreen, SettingsScreen, SearchScreen } from './pages/index';
 import { LogBox } from 'react-native';
 import { AppStateProvider } from './utils/AppState';
 
@@ -58,7 +58,7 @@ export default function App() {
           }} />
           <Stack.Screen name="Settings" component={SettingsScreen} options={{
             animation: "slide_from_bottom",
-            title: "Share a Song",
+            title: "Settings",
             cardStyle: {
               backgroundColor: "transparent"
             },
@@ -70,7 +70,7 @@ export default function App() {
             headerTintColor: "#DFDDE4"
           }} />
 
-          <Stack.Screen name="Friend" component={FriendScreen} options={{
+          <Stack.Screen name="Search" component={SearchScreen} options={{
             animation: "slide_from_left",
             header: () => null
           }} />

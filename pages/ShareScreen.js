@@ -29,7 +29,7 @@ export function ShareScreen({ navigation }) {
 				var items = await searchSpotify(text)
 				setTracks(items);
 			}}/>
-			<ScrollView contentContainerStyle={ShareStyles.Scroll}>
+			<ScrollView contentContainerStyle={styles.Scroll}>
 				{trackList}
 			</ScrollView>
 		</View>
@@ -37,7 +37,5 @@ export function ShareScreen({ navigation }) {
 }
 
 const ShareStyles = StyleSheet.create({
-	Scroll: {
-		alignItems: "center"
-	},
+	
 })

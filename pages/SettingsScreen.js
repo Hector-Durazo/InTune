@@ -5,13 +5,29 @@ import { styles } from "../styles/App.component.style.js";
 
 export const SettingsScreen = ({ navigation }) => {
 
-	return(
+	const options = [
+		"Account", "Profile",
+	];
+
+	let optionsList = options.map((option, index) => {
+		return (
+			<Pressable key={index} style={PageStyles.Option}>
+				<Text style={PageStyles.Text}>{option}</Text>
+			</Pressable>
+		)
+	})
+
+	return (
 		<View style={styles.MainView}>
-			
+			<ScrollView contentContainerStyle={styles.Scroll}>
+				{optionsList}
+			</ScrollView>
 		</View>
 	);
 }
 
-const ShareStyles = StyleSheet.create({
-	
+const PageStyles = StyleSheet.create({
+	Option: {
+
+	},
 })

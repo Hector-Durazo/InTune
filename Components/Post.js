@@ -51,13 +51,8 @@ export const Post = (props) => {
 				</View>
 			</View>
 			<View style={compStyles.UserDetails}>
-				<View style={compStyles.CaptionContainer}>
-					<Text style={compStyles.CaptionText}>{data.caption}</Text>
-				</View>
 				<Track data={ data } variant="post"/>
 			</View>
-			
-
 		</View>
 	);
 }

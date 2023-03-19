@@ -1,31 +1,31 @@
 import { useRef } from 'react';
 import { View, Pressable, Text, StyleSheet, Image, Animated, TextInput } from "react-native";
 import { styles, colors } from "../styles/App.component.style.js";
-import Button from './Button.js';
+import { Button } from './Button.js';
 import { addPost } from '../utils/UserData.js';
 import { auth } from "../firebaseConfig";
 
-export function Track(props) {
-	let { data, selected, onSubmit, variant="search" } = props
+export const Track = (props) => {
+	let { data, selected, onSubmit, variant = "search" } = props
 	const slide = useRef(new Animated.Value(0)).current
 	const height = slide.interpolate({
-		inputRange: [0,1],
+		inputRange: [0, 1],
 		outputRange: ['3%', '8%']
 	});
 
 	const caption = useRef("");
 
 	function select() {
-		if(variant!="search") return;
+		if (variant != "search") return;
 		// Slide currently selected track back to default.
-		if(selected.current) {
+		if (selected.current) {
 			Animated.timing(selected.current, {
 				toValue: 0,
 				duration: 500,
 				useNativeDriver: false
 			}).start()
 		}
-		
+
 		// Set new selected track
 		selected.current = slide;
 		Animated.timing(slide, {
@@ -34,7 +34,7 @@ export function Track(props) {
 			useNativeDriver: false
 		}).start()
 	}
-	
+
 
 	async function submit() {
 		var postData = {
@@ -48,71 +48,88 @@ export function Track(props) {
 			color: ""
 		}
 
-		try{
-			const colorRes = await 
-			fetch("https://us-central1-intune-cbe3f.cloudfunctions.net/color?url="+
-			data.album.images[2].url, {
-				method: 'GET',
-				headers: {
-					"Content-Type": "application/json"
-				},
-			});
+		try {
+			const colorRes = await
+				fetch("https://us-central1-intune-cbe3f.cloudfunctions.net/color?url=" +
+					data.album.images[2].url, {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json"
+					},
+				});
 			const color = await colorRes.json();
 			postData.color = color.hex;
 		} catch (err) {
 			console.error(err);
 		}
-		
+
 		addPost(postData.postedOn, postData)
 		onSubmit();
 	}
 
-	const albumImg = 
-		<Image
-		style={{...compStyles.AlbumArt}} 
-		source={{
-			uri: variant == "search" ? data.album.images[2].url : data.artUrl
-		}}/>
 
 	return (
-		<Animated.View style= {{
-			...compStyles.TrackContainer, 
+		<Animated.View style={{
+			...compStyles.TrackContainer,
 			height: variant == "search" ? height : "45%"
-			}}>
-			<Pressable 
-			onPress={select}
-			>
-				<View style={{...compStyles.Row, }}>
-					{albumImg}
-					<View style={{...compStyles.TextContainer}}>
-						<Text style={{...compStyles.Text}} numberOfLines={1}>{data.title}</Text>
-						<Text style={{...compStyles.Text, color:colors.GreyNi}}>{data.artist}</Text>
+		}}>
+			<Pressable onPress={select} >
+				<View style={{ ...compStyles.Row, }}>
+					<Image
+						style={{ ...compStyles.AlbumArt }}
+						source={{
+							uri: variant == "search" ? data.album.images[2].url : data.artUrl
+						}}
+					/>
+					<View style={{ ...compStyles.TextContainer }}>
+						<Text style={{ ...compStyles.Text }} numberOfLines={1}>{data.title}</Text>
+						<Text style={{ ...compStyles.Text, color: colors.GreyNi }}>{data.artist}</Text>
 					</View>
 				</View>
-				
+
 			</Pressable>
-			{ variant == "search" ?
-			<Animated.View style={{
-				...compStyles.Selected,
-				height: height == "3%" ? '0%' : '75%'
-				}}>
-					<TextInput 
-					style={compStyles.CaptionText}
-					placeholder="Add a Caption..."
-					placeholderTextColor={colors.GreyNi}
-					value={caption}
-					onChangeText={text => caption.current=text}
-					/>
-					<Button 
-					variant="accent" 
-					textStyle={{fontSize:16}} 
-					pressStyle={compStyles.Button}
-					onPress={submit}>
-						Submit
-					</Button>
-			</Animated.View>
-			: null}
-		</Animated.View>
+			{
+				{
+					"search": (
+						< Animated.View style={{
+							...compStyles.Selected,
+							height: height == "3%" ? '0%' : '75%'
+						}}>
+							<TextInput
+								style={compStyles.CaptionText}
+								placeholder="Add a Caption..."
+								placeholderTextColor={colors.GreyNi}
+								value={caption}
+								onChangeText={text => caption.current = text}
+							/>
+							<Button
+								variant="accent"
+								textStyle={{ fontSize: 16 }}
+								pressStyle={compStyles.Button}
+								onPress={submit}>
+								Submit
+							</Button>
+						</Animated.View>),
+
+					"post": (
+						<Animated.View style={compStyles.CaptionView}>
+							<Text style={compStyles.CaptionText}>
+								awdawd
+							</Text>
+							<Button
+								variant="accent"
+								textStyle={{ fontSize: 16 }}
+								pressStyle={compStyles.Button}
+								onPress={()=>{}}>
+								Submit
+							</Button>
+						</Animated.View>
+					)
+
+
+				}[variant]
+			}
+		</Animated.View >
 	)
 }
 
@@ -120,23 +137,28 @@ const compStyles = StyleSheet.create({
 	TrackContainer: {
 		// height: declared inline
 		width: "95%",
-		backgroundColor: colors.BlackSm,
+		backgroundColor: colors.WhiteGb,
 		borderRadius: 25,
 		marginBottom: 5,
 		marginHorizontal: "2%",
 		paddingHorizontal: "5%",
-		borderWidth: 1,
+		borderWidth: 0,
 		borderColor: colors.GreyNi,
+		elevation: 3,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.25,
+		shadowRadius: 1,
 	},
 	Row: {
 		flexDirection: "row",
 		alignItems: "center"
 	},
 	AlbumArt: {
-		aspectRatio: 1/1,
-		height: 48,
+		aspectRatio: 1 / 1,
+		height: 65,
 		marginVertical: "5%",
-		marginRight: "2%", 
+		marginRight: "2%",
 		borderRadius: 10,
 		borderColor: colors.WhiteGb,
 		borderWidth: 1
@@ -145,12 +167,12 @@ const compStyles = StyleSheet.create({
 		display: "flex",
 		flexDirection: "column",
 		width: "70%",
-		alignItems:"flex-start"
+		alignItems: "flex-start"
 	},
 	Text: {
 		flex: 0,
 		width: "100%",
-		color: colors.WhiteGb
+		color: colors.BlackSm
 	},
 	Selected: {
 		alignItems: "center",
@@ -169,5 +191,8 @@ const compStyles = StyleSheet.create({
 		height: "30%",
 		marginLeft: "67%",
 		marginTop: "3%"
+	},
+	CaptionView: {
+		height: "100%"
 	}
 })
