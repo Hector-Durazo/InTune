@@ -10,23 +10,15 @@ export const SearchScreen = () => {
 		// Page Contents
 		<View style={styles.MainView}>
 			<Search 
-			placeholder="Search Friends..."
+			placeholder="Search"
 			onChange={async (text)=>{
 				// search friends asynchronmous method here
 			}}/>
-			<ScrollView contentContainerStyle={styles.Scroll}>
-				<Text style={{...styles.TextLight }}>
-					{"Hello"}
-				</Text>
-				<Text style={{...styles.TextLight }}>
-					{"World"}
-				</Text>
-				<Text style={{...styles.TextLight }}>
-					{"Friends"}
-				</Text>
-				<Text style={{...styles.TextLight }}>
-					{"Here"}
-				</Text>
+			<ScrollView contentContainerStyle={ScreenStyles.Scroll}>
+				<Friend/>
+				<Friend/>
+				<Friend/>
+
 				<Friend/>
 			</ScrollView>
 		</View>
