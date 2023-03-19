@@ -18,6 +18,7 @@ export const SearchScreen = () => {
 				<Friend/>
 				<Friend/>
 				<Friend/>
+
 				<Friend/>
 			</ScrollView>
 		</View>
@@ -26,7 +27,5 @@ export const SearchScreen = () => {
 
 // Page specific styles
 const ScreenStyles = StyleSheet.create({
-	Scroll: {
-		alignItems: "center"
-	},
+
 })

@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native';
 // Global style sheet
 
 export const styles = StyleSheet.create({
+
+// -----------------View Styles---------------------	
 	// Container for screen elements
 	MainView: {
 		display: "flex",
@@ -22,6 +24,12 @@ export const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		alignItems: "flex-start",
 	},
+	// ScrollView container styling
+	Scroll: {
+		alignItems: "center"
+	},
+
+
 	Logo: {
 		width: "80%",
 		height: "20%",
