@@ -4,13 +4,14 @@ import { styles, colors } from "../styles/App.component.style.js";
 import { Button } from './Button.js';
 import { addPost } from '../utils/UserData.js';
 import { auth } from "../firebaseConfig";
+import { getVibrant } from '../utils/Spotify.js';
 
 export const Track = (props) => {
 	let { data, selected, onSubmit, variant = "search" } = props
 	const slide = useRef(new Animated.Value(0)).current
 	const height = slide.interpolate({
 		inputRange: [0, 1],
-		outputRange: ['3%', '8%']
+		outputRange: ['15%', '33%']
 	});
 
 	const caption = useRef("");
@@ -47,31 +48,16 @@ export const Track = (props) => {
 			artUrl: data.album.images[2].url,
 			color: ""
 		}
-
-		try {
-			const colorRes = await
-				fetch("https://us-central1-intune-cbe3f.cloudfunctions.net/color?url=" +
-					data.album.images[2].url, {
-					method: 'GET',
-					headers: {
-						"Content-Type": "application/json"
-					},
-				});
-			const color = await colorRes.json();
-			postData.color = color.hex;
-		} catch (err) {
-			console.error(err);
-		}
+		postData.color = getVibrant(postData.artUrl)
 
 		addPost(postData.postedOn, postData)
 		onSubmit();
 	}
 
-
 	return (
 		<Animated.View style={{
 			...compStyles.TrackContainer,
-			height: variant == "search" ? height : "45%"
+			height: variant == "search" ? height : "70%"
 		}}>
 			<Pressable onPress={select} >
 				<View style={{ ...compStyles.Row, }}>
@@ -87,48 +73,42 @@ export const Track = (props) => {
 					</View>
 				</View>
 
-			</Pressable>
-			{
 				{
-					"search": (
-						< Animated.View style={{
-							...compStyles.Selected,
-							height: height == "3%" ? '0%' : '75%'
-						}}>
-							<TextInput
-								style={compStyles.CaptionText}
-								placeholder="Add a Caption..."
-								placeholderTextColor={colors.GreyNi}
-								value={caption}
-								onChangeText={text => caption.current = text}
-							/>
-							<Button
-								variant="accent"
-								textStyle={{ fontSize: 16 }}
-								pressStyle={compStyles.Button}
-								onPress={submit}>
-								Submit
-							</Button>
-						</Animated.View>),
+					{
+						"search": (
+							< Animated.View style={{
+								...compStyles.Selected,
+								height: height == "15%" ? '0%' : '67%'
+							}}>
+								<TextInput
+									style={compStyles.CaptionTextInput}
+									placeholder="Add a Caption..."
+									placeholderTextColor={colors.GreyNi}
+									value={caption}
+									onChangeText={text => caption.current = text}
+								/>
+								<Button
+									variant="accent"
+									textStyle={{ fontSize: 16 }}
+									style={compStyles.Button}
+									onPress={submit}>
+									Submit
+								</Button>
+							</Animated.View>),
 
-					"post": (
-						<Animated.View style={compStyles.CaptionView}>
-							<Text style={compStyles.CaptionText}>
-								awdawd
-							</Text>
-							<Button
-								variant="accent"
-								textStyle={{ fontSize: 16 }}
-								pressStyle={compStyles.Button}
-								onPress={()=>{}}>
-								Submit
-							</Button>
-						</Animated.View>
-					)
+						"post": (
+							<View style={compStyles.CaptionView}>
+								<Text style={compStyles.CaptionText}>
+									{data.caption}
+								</Text>
+							</View>
+						)
 
+					}[variant]
+				}
 
-				}[variant]
-			}
+			</Pressable>
+
 		</Animated.View >
 	)
 }
@@ -137,6 +117,8 @@ const compStyles = StyleSheet.create({
 	TrackContainer: {
 		// height: declared inline
 		width: "95%",
+		display: "flex",
+		flexDirection: "column",
 		backgroundColor: colors.WhiteGb,
 		borderRadius: 25,
 		marginBottom: 5,
@@ -178,21 +160,35 @@ const compStyles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "flex-start"
 	},
+	Button: {
+		width: "27%",
+		height: "30%",
+		marginLeft: "70%",
+		marginTop: "2%",
+		backgroundColor: colors.PurpleSb,
+	},
+	ButtonText: {
+		fontSize: 16,
+		color: colors.WhiteGb
+	},
+	CaptionView: {
+		display: "flex",
+		justifyContent: "center",
+		backgroundColor: "background: rgba(0, 0, 0, 0.18)",
+		height: "27%",
+		borderRadius: 100
+	},
 	CaptionText: {
-		backgroundColor: "black",
-		color: colors.WhiteGb,
+		color: colors.BlackSm,
+		width: "95%",
+		borderRadius: 25,
+		paddingHorizontal: "5%",
+	},
+	CaptionTextInput: {
+		backgroundColor: "background: rgba(0, 0, 0, 0.18)",
 		width: "95%",
 		height: "30%",
 		borderRadius: 25,
 		paddingHorizontal: "5%",
-	},
-	Button: {
-		width: "27%",
-		height: "30%",
-		marginLeft: "67%",
-		marginTop: "3%"
-	},
-	CaptionView: {
-		height: "100%"
 	}
 })

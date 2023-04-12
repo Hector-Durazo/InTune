@@ -2,6 +2,13 @@ import { StyleSheet } from 'react-native';
 
 // Global style sheet
 
+export const colors = {
+	BlackSm : "#0F0F0F",
+	WhiteGb : "#DFDDE4",
+	PurpleSb :  "#8D6AF6",
+	GreyNi : "#3D3D3D",
+}
+
 export const styles = StyleSheet.create({
 
 // -----------------View Styles---------------------	
@@ -24,11 +31,28 @@ export const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		alignItems: "flex-start",
 	},
-	// ScrollView container styling
-	Scroll: {
-		alignItems: "center"
+	ScrollView: {
+		display: "flex",
+		width: "100%",
+		height: "100%",
+	},
+	Button: {
+		display: "flex",
+		width: "70%",
+		borderRadius: 25,
+		justifyContent: "center",
+		alignItems: "center",
+		overflow: "hidden"
 	},
 
+	White: {
+		backgroundColor: colors.WhiteGb,
+		color: colors.BlackSm,
+	},
+	Purple: {
+		backgroundColor: colors.PurpleSb,
+		color: colors.WhiteGb,
+	},
 
 	Logo: {
 		width: "80%",
@@ -39,7 +63,7 @@ export const styles = StyleSheet.create({
 		padding: "2%",
 		marginBottom: 20,
 		borderRadius: 15,
-		color: "#DFDDE4",
+		color: colors.WhiteGb,
 		backgroundColor: "rgba(141,106,246,0.27)",
 		width: "80%",
 		height: "26%",
@@ -51,7 +75,7 @@ export const styles = StyleSheet.create({
 	TextField: {
 		padding: "2%",
 		borderRadius: 15,
-		color: "#DFDDE4",
+		color: colors.WhiteGb,
 		backgroundColor: "rgba(141,106,246,0.27)",
 		fontSize: 18,
 	},
@@ -62,7 +86,10 @@ export const styles = StyleSheet.create({
 		fontWeight: "400",
 	},
 	TextLight: {
-		color: "#DFDDE4",
+		color: colors.WhiteGb,
+	},
+	TextDark: {
+		color: colors.BlackSm,
 	},
 	Heading: {
 		fontSize: 28,
@@ -71,21 +98,15 @@ export const styles = StyleSheet.create({
 	ProfilePicImg: {
 		position: "relative",
 		aspectRatio: 1 / 1,
-		height: "175%",
-		overflow: "hidden"
+		height: "100%",
+		overflow: "hidden",
+		borderRadius: 100,
 	},
 	ProfilePicButton: {
-		aspectRatio: 1/1,
-		width: "15%",
+		aspectRatio: 1 / 1,
+		width: "20%",
 		borderRadius: 100,
-		margin: "3%",
 		borderWidth: 1,
 	},
 });
 
-export const colors = {
-	BlackSm : "#0F0F0F",
-	WhiteGb : "#DFDDE4",
-	PurpleSb :  "#8D6AF6",
-	GreyNi : "#3D3D3D",
-}

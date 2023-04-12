@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { Dimensions, Animated, View, Text, TextInput, Pressable } from "react-native";
 import { styles } from "../styles/App.component.style.js";
-import { Button, PhoneInput } from "../components";
+import { Button, PhoneInput, TouchView } from "../components";
 import { auth } from "../firebaseConfig.js";
 import { getUserData } from "../utils/UserData.js";
 import { AppState } from "../utils/AppState.js";
@@ -85,7 +85,7 @@ export const LoginScreen = ({ route, navigation }) => {
   const winHeight = Dimensions.get('window').height;
 
   return (
-    <View style={styles.MainView}>
+    <TouchView style={styles.MainView}>
       <Animated.Image
 				style={{
 				...styles.Logo, 
@@ -111,6 +111,6 @@ export const LoginScreen = ({ route, navigation }) => {
         }}>
         Share, Listen, Together
       </Animated.Text>
-    </View>
+    </TouchView>
   );
 }

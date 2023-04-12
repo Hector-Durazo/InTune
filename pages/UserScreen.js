@@ -1,34 +1,28 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { Animated, View, StyleSheet, Text } from "react-native";
-import { styles } from "../styles/App.component.style.js";
-import { auth } from "../firebaseConfig.js";
+import * as ImagePicker from 'expo-image-picker';
+import { colors, styles } from "../styles/App.component.style.js";
+import { app, auth, db } from "../firebaseConfig.js";
 // Import Components
-import { Button, Post } from "../components/";
-import { updateUserData, selectPicture, generateBlob, uploadFile } from "../utils/UserData.js";
+import { Button, Post } from "../components/index.js";
+import { addRequest } from "../utils/UserData.js";
 import { AppState } from "../utils/AppState.js";
 
-export const ProfileScreen = () => {
+export const UserScreen = ({ route, navigation, }) => {
 	// Screen Variables, Refs, and Hooks
-	const name = auth.currentUser.displayName;
-	const userName = "@" + auth.currentUser.username;
+
+	const { data } = route.params
+
+	const name = data.displayName
+	const userName = "@" + data.username
 
 	const [{posts}, dispatch] = useContext(AppState)
-	const [image, setImage] = useState(auth.currentUser.photoURL);
 	
 	let postList = posts.map((post, index) => {
 		return <Post key={index} data={post} />;
 	});
 
-	const changePicture = async () => {
-		const picture = await selectPicture()
-		if(!picture) return;
-		const blob = await generateBlob(picture.uri)
-		const url = await uploadFile(blob, 'user/' + auth.currentUser.uid + '/pfp.jpg')
-		if(!url) return;
-		setImage(url);
-		auth.currentUser.photoURL = url;
-		updateUserData(auth.currentUser, {picture: url} )
-	}
+	const addFriendText = "Add Friend"
 
 	return (
 		// Page Contents
@@ -36,8 +30,7 @@ export const ProfileScreen = () => {
 			<Button 
 			style={ScreenStyles.ProfilePic}
 			imgStyle={ScreenStyles.ProfilePicImg}
-			onPress={changePicture} 
-			image={{uri: image}}
+			image={{uri: 'data:image/jpeg;base64,' + data.picture}}
 			/>
 			<Text style={{ ...ScreenStyles.Name, ...styles.TextLight }}>
 				{name}
@@ -55,6 +48,13 @@ export const ProfileScreen = () => {
 			>
 				{"Number of Friends Here"}
 			</Text>
+			<Button 
+				style={{ ...ScreenStyles.Button, ...ScreenStyles.AlignCenter }}
+				textStyle={ScreenStyles.ButtonText}
+				onPress={()=>{addRequest(data)}}
+			>
+					{addFriendText}
+			</Button>
 			<View style={ScreenStyles.ProfileBody}>
 				<Text
 					style={{ ...ScreenStyles.RecentPost, ...styles.TextLight }}
@@ -62,7 +62,10 @@ export const ProfileScreen = () => {
 					{"Recent Post:"}
 				</Text>
 				{postList[0]}
-				<Button style={ScreenStyles.HistoryButton}>
+				<Button 
+					style={{ ...ScreenStyles.Button, ...styles.AlignEnd }}
+					textStyle={ScreenStyles.ButtonText}
+				>
 					{"History"}
 				</Button>
 			</View>
@@ -102,11 +105,23 @@ const ScreenStyles = StyleSheet.create({
 		textAlign: "left",
 		paddingBottom: 10,
 	},
-	HistoryButton: {
+	AlignCenter: {
+		alignSelf: "center",
+	},
+	AlignEnd: {
 		alignSelf: "flex-end",
+	},
+	Button: {
 		borderRadius: 15,
+		backgroundColor: colors.PurpleSb,
+		width: "30%",
+		aspectRatio: 1 / .4
 	},
 	ProfileBody: {
 		paddingTop: 30,
 	},
+	ButtonText: {
+		color: colors.WhiteGb,
+		fontSize: 18
+	}
 });

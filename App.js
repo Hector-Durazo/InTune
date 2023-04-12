@@ -4,11 +4,17 @@ import { NavigationContainer, useNavigationContainerRef } from "@react-navigatio
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { useFonts, Inter_400Regular } from '@expo-google-fonts/inter';
 import { registerRootComponent } from "expo";
+import { useURL, parse } from 'expo-linking'
 import { Header, Footer } from './components/index';
 import { LoginScreen, MainScreen, ShareScreen, 
-        ProfileScreen, SettingsScreen, SearchScreen } from './pages/index';
+        ProfileScreen, SettingsScreen, SearchScreen,
+        UserScreen, NotificationScreen
+      } from './pages/index';
 import { LogBox } from 'react-native';
 import { AppStateProvider } from './utils/AppState';
+import { authorizeSpotifyUser } from './utils/Spotify';
+import { auth } from './firebaseConfig'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Main App controller for navigation
 
@@ -20,6 +26,16 @@ LogBox.ignoreLogs([
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+  const url = useURL()
+  if(url){
+    const { hostname, path, queryParams } = parse(url)
+    const refresh = getRefresh()
+    if((!refresh) && queryParams && queryParams.code){
+      const { code, state } = queryParams
+      authorizeSpotifyUser(code)
+    }
+  }
+
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
   })
@@ -69,8 +85,15 @@ export default function App() {
             },
             headerTintColor: "#DFDDE4"
           }} />
-
           <Stack.Screen name="Search" component={SearchScreen} options={{
+            animation: "slide_from_left",
+            header: () => null
+          }} />
+          <Stack.Screen name="User" component={UserScreen} options={{
+            animation: "slide_from_right",
+            header: () => null
+          }} />
+          <Stack.Screen name="Notification" component={NotificationScreen} options={{
             animation: "slide_from_left",
             header: () => null
           }} />
@@ -82,3 +105,7 @@ export default function App() {
 }
 
 registerRootComponent(App)
+
+const getRefresh = async () => {
+  return await AsyncStorage.getItem('@spotifyRefresh')
+}

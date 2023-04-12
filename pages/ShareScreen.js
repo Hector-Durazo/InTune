@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Animated, View, Text, TextInput, Pressable, StyleSheet, ScrollView } from "react-native";
 import { styles } from "../styles/App.component.style.js";
-import { Button, Search, Track } from "../components";
+import { Button, Search, Track, TouchView } from "../components";
 import { searchSpotify } from "../utils/Spotify"
 
 
@@ -18,24 +18,24 @@ export function ShareScreen({ navigation }) {
 		track.title = track.name;
 		track.artist = track.artists[0].name
 		track.artUrl = track.album.images[2].url
-		return <Track key={index} data={track} selected={trackRef} onSubmit={onSubmit}/>
+		return <Track key={index} data={track} selected={trackRef} onSubmit={onSubmit} />
 	});
 
-	return(
-		<View style={styles.MainView}>
-			<Search 
-			placeholder="Search for a Song..."
-			onChange={async (text)=>{
-				var items = await searchSpotify(text)
-				setTracks(items);
-			}}/>
-			<ScrollView contentContainerStyle={styles.Scroll}>
+	return (
+		<TouchView style={styles.MainView}>
+			<Search
+				placeholder="Search for a Song..."
+				onChange={async (text) => {
+					var items = await searchSpotify(text)
+					setTracks(items);
+				}} />
+			<ScrollView contentContainerStyle={styles.ScrollView}>
 				{trackList}
 			</ScrollView>
-		</View>
+		</TouchView>
 	);
 }
 
 const ShareStyles = StyleSheet.create({
-	
+
 })

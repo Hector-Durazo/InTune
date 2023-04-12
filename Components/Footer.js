@@ -1,5 +1,5 @@
 import { StyleSheet, View, Animated } from "react-native";
-import { styles } from "../styles/App.component.style.js";
+import { styles, colors } from "../styles/App.component.style.js";
 import { Button } from "./Button";
 
 // Footer
@@ -23,12 +23,12 @@ export const Footer = (props) => {
 					],
 				}}
 			>
-				<Button pressStyle={compStyles.Button} onPress={() => { navRef.navigate("Search")}}></Button>
+				<Button style={{...styles.Button, ...compStyles.Button}} onPress={() => { navRef.navigate("Search")}}></Button>
 				<Button
-					pressStyle={compStyles.Button}
+					style={{...styles.Button, ...compStyles.Button}}
 					onPress={() => { navRef.navigate("Main")}}
 				></Button>
-				<Button pressStyle={compStyles.Button}></Button>
+				<Button style={{...styles.Button, ...compStyles.Button}}></Button>
 			</Animated.View>
 		</View>
 	);
@@ -52,5 +52,6 @@ const compStyles = StyleSheet.create({
 		aspectRatio: 1 / 1,
 		width: "10%",
 		borderRadius: 100,
+		backgroundColor: colors.WhiteGb,
 	},
 });
