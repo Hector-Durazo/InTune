@@ -40,14 +40,14 @@ export const Header = (props) => {
 					{
 						"picture": 
 							(<Button 
-							pressStyle={styles.ProfilePicButton}
+							style={{...styles.Button, ...styles.ProfilePicButton}}
 							imgStyle={styles.ProfilePicImg}
 							onPress={()=>{navRef.navigate("Profile")}}
 							image={{uri: 'data:image/jpeg;base64,' + picture}}/>),
 					
 						"settings": 
 							(<Button 
-							pressStyle={compStyles.SettingsButton}
+							style={{...styles.Button, ...compStyles.SettingsButton}}
 							imgStyle={compStyles.SettingsPic}
 							onPress={()=>{navRef.navigate("Settings")}}
 							image={require("../assets/settings.png")}/>)

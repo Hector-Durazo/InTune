@@ -1,4 +1,5 @@
 import { Pressable, Text, StyleSheet, Image } from "react-native"
+import { styles, colors } from "../styles/App.component.style";
 
 // Button Component
 // Has variants:
@@ -8,51 +9,28 @@ import { Pressable, Text, StyleSheet, Image } from "react-native"
 // 		<Button variant="accent">Button Text</Button>
 
 export const Button = (props) => {
-	let {children, onPress, variant="regular", pressStyle={}, textStyle={}, image=null, imgStyle={}} = props;
-	let buttonStyles = {};
-	switch(variant) {
-		case "regular":
-			buttonStyles = {
-				backgroundColor: "#DFDDE4",
-				color: "black",
-			}
-			break;
-		case "accent":
-			buttonStyles = {
-				backgroundColor: "#8D6AF6",
-				color: "#DFDDE4",
-			}
-			break;
-		case "nostyle":
-			compStyles.Button = {}
-	}
+	let {
+		children, onPress, style = {}, 
+		image, imgStyle, textStyle
+	} = props;
+
+
+	if (typeof children === 'string') children = (<Text style={textStyle}>{children}</Text>);
+	if (image) children = (<Image source={image} style={imgStyle} />);
+
 	return (
-		<Pressable onPress={onPress} style={({pressed})=>[
-			{
-				...compStyles.Button, ...buttonStyles, ...pressStyle,
-				transform: [{scale: pressed ? 0.9 : 1.0}]
-			}]}>
-            {image ? <Image style={imgStyle} source={image}/> : 
-			<Text style={{...compStyles.Text, ...buttonStyles, ...textStyle}}>{children}</Text>}
+		<Pressable onPress={onPress}
+			style={(pressed) => {
+				return {
+					...style,
+					transform: [{ scale: pressed ? 0.9 : 1.0 }]
+				}
+			}}>
+			{children}
 		</Pressable>
 	)
 }
 
 const compStyles = StyleSheet.create({
-	Text: {
-		textAlign: 'center',
-		fontSize: 20,
-		fontFamily: "Inter_400Regular",
-		fontWeight: "400",
-		padding: 0,
-	},
-	Button: {
-		marginVertical: "1%",
-		width: "70%",
-		padding: "3%",
-		borderRadius: 25,
-		justifyContent: "center",
-		alignItems: "center",
-		overflow: "hidden"
-	}
+
 })

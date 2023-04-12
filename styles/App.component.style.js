@@ -2,6 +2,13 @@ import { StyleSheet } from 'react-native';
 
 // Global style sheet
 
+export const colors = {
+	BlackSm : "#0F0F0F",
+	WhiteGb : "#DFDDE4",
+	PurpleSb :  "#8D6AF6",
+	GreyNi : "#3D3D3D",
+}
+
 export const styles = StyleSheet.create({
 
 // -----------------View Styles---------------------	
@@ -26,7 +33,29 @@ export const styles = StyleSheet.create({
 	},
 	// ScrollView container styling
 	Scroll: {
+		width: "100%",
+		height: "90%",
 		alignItems: "center"
+	},
+
+	Button: {
+		display: "flex",
+		marginVertical: "1%",
+		width: "70%",
+		padding: "3%",
+		borderRadius: 25,
+		justifyContent: "center",
+		alignItems: "center",
+		overflow: "hidden"
+	},
+
+	White: {
+		backgroundColor: colors.WhiteGb,
+		color: colors.BlackSm,
+	},
+	Purple: {
+		backgroundColor: colors.PurpleSb,
+		color: colors.WhiteGb,
 	},
 
 
@@ -75,7 +104,7 @@ export const styles = StyleSheet.create({
 		overflow: "hidden"
 	},
 	ProfilePicButton: {
-		aspectRatio: 1/1,
+		aspectRatio: 1 / 1,
 		width: "15%",
 		borderRadius: 100,
 		margin: "3%",
@@ -83,9 +112,3 @@ export const styles = StyleSheet.create({
 	},
 });
 
-export const colors = {
-	BlackSm : "#0F0F0F",
-	WhiteGb : "#DFDDE4",
-	PurpleSb :  "#8D6AF6",
-	GreyNi : "#3D3D3D",
-}

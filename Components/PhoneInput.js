@@ -123,8 +123,8 @@ export const PhoneInput = (props) => {
 					/>
 				</View>
 				<Button 
-				variant="accent" 
-				pressStyle={compStyles.Button}
+				style={{...styles.Button, ...compStyles.Button, ...styles.Purple}}
+				textStyle={{...styles.Text}}
 				onPress={sendCode}
 				>Continue
 				</Button>
@@ -144,13 +144,12 @@ export const PhoneInput = (props) => {
 				onChangeText={value => verifCode.current = value}
 				/>
 				<Button 
-				variant="accent" 
-				pressStyle={compStyles.Button}
+				style={{...styles.Button, ...styles.Purple, ...compStyles.Button}}
 				onPress={confirmCode}>
 				Confirm
 				</Button>
 				<Button
-				pressStyle={compStyles.Button}
+				style={{...styles.Button, ...compStyles.Button}}
 				onPress={() => slideInput(0)}>
 				Cancel
 				</Button>
@@ -187,7 +186,7 @@ export const PhoneInput = (props) => {
 				onChangeText={value => username.current = value}
 				/>
 				<Button 
-				pressStyle={compStyles.Button}
+				style={{...styles.Button, ...compStyles.Button}}
 				onPress={linkSpotify}>
 				Link Spotify
 				</Button>

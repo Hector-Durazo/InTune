@@ -64,7 +64,7 @@ export function MainScreen({ navigation }) {
 				{postList}
 			</ScrollView>
 			<Button
-				pressStyle={{ ...mainStyles.ShareButton, }}
+				style={{ ...mainStyles.ShareButton, }}
 				image={require("../assets/InTune_Logo_Icon.png")}
 				imgStyle={{ ...mainStyles.ShareButImg, }}
 				onPress={() => {

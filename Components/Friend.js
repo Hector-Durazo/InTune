@@ -4,11 +4,15 @@ import { Button } from './Button';
 
 export const Friend = (props) => {
     
-    const { data } = props
+    const { data, navigation } = props
+
+    const onPress = (event) => {
+        navigation.navigate('User', { data }) // TODO: push is probably preferred to save screen state
+    }
 
     return (
         <Animated.View style={{...compStyles.Container}}>
-            <Button pressStyle={{...compStyles.Row}} variant={"nostyle"}>
+            <Pressable style={{...compStyles.Row}} onPress={onPress}>
                 <Image style = {compStyles.ProfilePicButton} source={{uri: 'data:image/jpeg;base64,' + data.picture}}/>
                 <View style={compStyles.Column}>
                     <Text style={{...compStyles.Name}}>
@@ -18,7 +22,7 @@ export const Friend = (props) => {
                         {data.username}
                     </Text>
                 </View>
-            </Button>
+            </Pressable>
         </Animated.View>
     )
 }
@@ -28,7 +32,7 @@ const compStyles = StyleSheet.create({
     // TODO: update css
     Container: {
         width: "95%",
-        height: "75%",
+        height: "12%",
         backgroundColor: colors.WhiteGb,
         borderRadius: 25,
 		marginBottom: 5,
@@ -65,8 +69,7 @@ const compStyles = StyleSheet.create({
         fontSize: 10,
 	},
     ProfilePicButton: {
-        aspectRatio: 1 / 1,
-        height: 65,
+        height: 50,
         borderRadius: 100,
         borderWidth: 1,
         marginRight: "2%",

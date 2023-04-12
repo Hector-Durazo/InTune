@@ -23,12 +23,12 @@ export const Footer = (props) => {
 					],
 				}}
 			>
-				<Button pressStyle={compStyles.Button} onPress={() => { navRef.navigate("Search")}}></Button>
+				<Button style={{...styles.Button, ...compStyles.Button}} onPress={() => { navRef.navigate("Search")}}></Button>
 				<Button
-					pressStyle={compStyles.Button}
+					style={{...styles.Button, ...compStyles.Button}}
 					onPress={() => { navRef.navigate("Main")}}
 				></Button>
-				<Button pressStyle={compStyles.Button}></Button>
+				<Button style={{...styles.Button, ...compStyles.Button}}></Button>
 			</Animated.View>
 		</View>
 	);

@@ -4,7 +4,7 @@ import { styles } from "../styles/App.component.style.js";
 import { Search, Friend } from "../components/index";
 import { queryUsers } from "../utils/UserData.js";
 
-export const SearchScreen = () => {
+export const SearchScreen = ({ route, navigation }) => {
 	// Screen Variables, Refs, and Hooks
 	const [results, setResults] = useState([]);
 
@@ -14,7 +14,7 @@ export const SearchScreen = () => {
 	}
 
 	const resultList = results.map((user, ind) => {
-		return <Friend key={ind} data={user}/>
+		return <Friend key={ind} data={user} navigation={navigation}/>
 	})
 
 	return(
@@ -23,7 +23,7 @@ export const SearchScreen = () => {
 			<Search 
 			placeholder="Search"
 			onChange={onChange}/>
-			<ScrollView contentContainerStyle={ScreenStyles.Scroll}>
+			<ScrollView contentContainerStyle={styles.Scroll}>
 				{resultList}
 			</ScrollView>
 		</View>

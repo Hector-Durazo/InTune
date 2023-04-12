@@ -6,7 +6,9 @@ import { useFonts, Inter_400Regular } from '@expo-google-fonts/inter';
 import { registerRootComponent } from "expo";
 import { Header, Footer } from './components/index';
 import { LoginScreen, MainScreen, ShareScreen, 
-        ProfileScreen, SettingsScreen, SearchScreen } from './pages/index';
+        ProfileScreen, SettingsScreen, SearchScreen,
+        UserScreen
+      } from './pages/index';
 import { LogBox } from 'react-native';
 import { AppStateProvider } from './utils/AppState';
 
@@ -69,8 +71,11 @@ export default function App() {
             },
             headerTintColor: "#DFDDE4"
           }} />
-
           <Stack.Screen name="Search" component={SearchScreen} options={{
+            animation: "slide_from_left",
+            header: () => null
+          }} />
+          <Stack.Screen name="User" component={UserScreen} options={{
             animation: "slide_from_left",
             header: () => null
           }} />
