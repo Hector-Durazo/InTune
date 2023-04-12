@@ -48,7 +48,7 @@ export const Track = (props) => {
 			artUrl: data.album.images[2].url,
 			color: ""
 		}
-		postData.color = getVibrant(postData.artUrl)
+		postData.color = await getVibrant(postData.artUrl)
 
 		addPost(postData.postedOn, postData)
 		onSubmit();
