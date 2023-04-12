@@ -1,57 +1,36 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { Animated, View, StyleSheet, Text } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
-import { styles } from "../styles/App.component.style.js";
+import { colors, styles } from "../styles/App.component.style.js";
 import { app, auth, db } from "../firebaseConfig.js";
 // Import Components
 import { Button, Post } from "../components/index.js";
-import { updateUserData } from "../utils/UserData.js";
+import { addRequest } from "../utils/UserData.js";
 import { AppState } from "../utils/AppState.js";
 
-export const UserScreen = ({ route, navigation }) => {
+export const UserScreen = ({ route, navigation, }) => {
 	// Screen Variables, Refs, and Hooks
-	const name = auth.currentUser.displayName;
-	const userName = "@" + auth.currentUser.username;
+
+	const { data } = route.params
+
+	const name = data.displayName
+	const userName = "@" + data.username
 
 	const [{posts}, dispatch] = useContext(AppState)
-	const [image, setImage] = useState(null);
-
-	useEffect(() => {
-		console.log('profile useeffect called')
-		if (auth.currentUser.photoURL) {
-			setImage(auth.currentUser.photoURL)
-		}
-	}, [setImage]);
 	
 	let postList = posts.map((post, index) => {
 		return <Post key={index} data={post} />;
 	});
 
-	const changePicture = async () => {
-		let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-		if (permission == "none") { return; }
-		let result = await ImagePicker.launchImageLibraryAsync({
-			quality: 1,
-			allowsEditing: true,
-			base64 : true,
-			aspect: [1,1],
-		});
-		if(result.assets){
-			setImage(result.assets[0].base64);
-			auth.currentUser.photoURL = result.assets[0].base64;
-			updateUserData(auth.currentUser, {picture: result.assets[0].base64} )
-		}
-	}
-
+	const addFriendText = "Add Friend"
 
 	return (
 		// Page Contents
 		<View style={styles.MainView}>
 			<Button 
-			pressStyle={ScreenStyles.ProfilePic}
+			style={ScreenStyles.ProfilePic}
 			imgStyle={ScreenStyles.ProfilePicImg}
-			onPress={changePicture} 
-			image={{uri: 'data:image/jpeg;base64,' + image}}
+			image={{uri: 'data:image/jpeg;base64,' + data.picture}}
 			/>
 			<Text style={{ ...ScreenStyles.Name, ...styles.TextLight }}>
 				{name}
@@ -69,6 +48,13 @@ export const UserScreen = ({ route, navigation }) => {
 			>
 				{"Number of Friends Here"}
 			</Text>
+			<Button 
+				style={{ ...ScreenStyles.Button, ...ScreenStyles.AlignCenter }}
+				textStyle={ScreenStyles.ButtonText}
+				onPress={()=>{addRequest(data)}}
+			>
+					{addFriendText}
+			</Button>
 			<View style={ScreenStyles.ProfileBody}>
 				<Text
 					style={{ ...ScreenStyles.RecentPost, ...styles.TextLight }}
@@ -76,7 +62,10 @@ export const UserScreen = ({ route, navigation }) => {
 					{"Recent Post:"}
 				</Text>
 				{postList[0]}
-				<Button pressStyle={ScreenStyles.HistoryButton}>
+				<Button 
+					style={{ ...ScreenStyles.Button, ...styles.AlignEnd }}
+					textStyle={ScreenStyles.ButtonText}
+				>
 					{"History"}
 				</Button>
 			</View>
@@ -88,17 +77,18 @@ export const UserScreen = ({ route, navigation }) => {
 const ScreenStyles = StyleSheet.create({
 	ProfilePic: {
 		aspectRatio: 1 / 1,
-		width: "10%",
+		width: "40%",
 		borderRadius: 100,
 		margin: "3%",
 		marginTop: "10%",
 		borderWidth: 1,
+		overflow: "hidden",
 	},
 	ProfilePicImg: {
-		position: "relative",
 		aspectRatio: 1 / 1,
-		height: "100%",
-		overflow: "hidden"
+		width: "100%",
+		overflow: "hidden",
+		borderRadius: 100,
 	},
 	Name: {
 		fontSize: 16,
@@ -115,11 +105,23 @@ const ScreenStyles = StyleSheet.create({
 		textAlign: "left",
 		paddingBottom: 10,
 	},
-	HistoryButton: {
+	AlignCenter: {
+		alignSelf: "center",
+	},
+	AlignEnd: {
 		alignSelf: "flex-end",
+	},
+	Button: {
 		borderRadius: 15,
+		backgroundColor: colors.PurpleSb,
+		width: "30%",
+		aspectRatio: 1 / .4
 	},
 	ProfileBody: {
 		paddingTop: 30,
 	},
+	ButtonText: {
+		color: colors.WhiteGb,
+		fontSize: 18
+	}
 });

@@ -9,9 +9,10 @@ import { Track } from './Track';
 export const Post = (props) => {
 	const { data } = props;
 	const [{friends}, dispatch] = useContext(AppState);
-	let picture = "";
+	let picture = null;
 	const user = friends.find(user => user.username === data.username);
-	if (user && user.picture) picture = user.picture;
+	if (user && user.picture) picture = {uri: user.picture};
+	
 
 	var timeText = "";
 	const timeSince = (new Date().getTime() - data.postedOn)/1000;
@@ -24,9 +25,8 @@ export const Post = (props) => {
 	} else if(timeSince < 86400*8){
 		timeText = Math.round(timeSince/86400) + " days ago";
 	}else{
-		const date = new Date()
-		date.setMilliseconds(data.postedOn)
-		timeText = date.getMonth() + '/' + date.getDate() + '/' + date.getUTCFullYear();
+		const date = new Date(data.postedOn);
+		timeText = date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear();
 	}
 
 	return (
@@ -37,9 +37,9 @@ export const Post = (props) => {
 
 			<View style={compStyles.UserRow}>
 				<Button 
-					pressStyle={styles.ProfilePicButton}
+					style={styles.ProfilePicButton}
 					imgStyle={styles.ProfilePicImg}
-					image={{uri: 'data:image/jpeg;base64,' + picture}}
+					image={picture}
 					/>
 				<View style={compStyles.UserDetails}>
 					<Text style={compStyles.DisplayName}>{auth.currentUser.displayName}</Text>
@@ -50,9 +50,7 @@ export const Post = (props) => {
 					<Text style={{...compStyles.CommentText}}>1 Comment</Text>
 				</View>
 			</View>
-			<View style={compStyles.UserDetails}>
-				<Track data={ data } variant="post"/>
-			</View>
+			<Track data={ data } variant="post"/>
 		</View>
 	);
 }
@@ -66,12 +64,17 @@ const compStyles = StyleSheet.create({
 		padding: "4%"
 	},
 	UserRow: {
-		flexDirection: "row"
+		flexDirection: "row",
+		height: "30%",
+		marginBottom: "2%",
+		paddingLeft: "2%"
 	},
 	UserDetails: {
 		flexDirection: "column",
-		height: "90%",
-		alignItems: "flex-start"
+		height: "100%",
+		alignItems: "flex-start",
+		justifyContent: "flex-start",
+		marginLeft: "2%",
 	},
 	DisplayName: {
 		color: colors.BlackSm,
@@ -83,9 +86,10 @@ const compStyles = StyleSheet.create({
 	},
 	PostDetails: {
 		flexDirection: "column",
-		height: "40%",
+		height: "100%",
 		width: "45%",
 		alignItems: "flex-end",
+		justifyContent: "flex-start",
 		marginLeft: "0%",
 		marginTop: 5
 	},
@@ -113,5 +117,6 @@ const compStyles = StyleSheet.create({
 		paddingLeft: "4%",
 		marginVertical: "3%",
 		marginHorizontal: "2.5%"
-	}
+	},
+
 })

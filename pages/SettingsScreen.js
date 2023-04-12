@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Animated, View, Text, TextInput, Pressable, StyleSheet, ScrollView } from "react-native";
 import { styles } from "../styles/App.component.style.js";
+import { Button } from "../components/index.js";
+import { openAuth } from "../utils/Spotify.js";
 
 
 export const SettingsScreen = ({ navigation }) => {
@@ -19,8 +21,13 @@ export const SettingsScreen = ({ navigation }) => {
 
 	return (
 		<View style={styles.MainView}>
-			<ScrollView contentContainerStyle={styles.Scroll}>
+			<ScrollView contentContainerStyle={styles.ScrollView}>
 				{optionsList}
+				<Button 
+					style={{...styles.Button, ...styles.White}}
+					textStyle={styles.TextDark}
+					onPress={openAuth}
+				>Link Spotify</Button>
 			</ScrollView>
 		</View>
 	);

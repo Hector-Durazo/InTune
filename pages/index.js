@@ -5,3 +5,4 @@ export {ProfileScreen} from './ProfileScreen';
 export {SettingsScreen} from './SettingsScreen';
 export {SearchScreen} from './SearchScreen';
 export {UserScreen} from './UserScreen';
+export {NotificationScreen} from './NotificationScreen'

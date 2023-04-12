@@ -1,11 +1,10 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { Animated, View, StyleSheet, Text } from "react-native";
-import * as ImagePicker from 'expo-image-picker';
 import { styles } from "../styles/App.component.style.js";
-import { app, auth, db } from "../firebaseConfig.js";
+import { auth } from "../firebaseConfig.js";
 // Import Components
 import { Button, Post } from "../components/";
-import { updateUserData } from "../utils/UserData.js";
+import { updateUserData, selectPicture, generateBlob, uploadFile } from "../utils/UserData.js";
 import { AppState } from "../utils/AppState.js";
 
 export const ProfileScreen = () => {
@@ -14,43 +13,31 @@ export const ProfileScreen = () => {
 	const userName = "@" + auth.currentUser.username;
 
 	const [{posts}, dispatch] = useContext(AppState)
-	const [image, setImage] = useState(null);
-
-	useEffect(() => {
-		console.log('profile useeffect called')
-		if (auth.currentUser.photoURL) {
-			setImage(auth.currentUser.photoURL)
-		}
-	}, [setImage]);
+	const [image, setImage] = useState(auth.currentUser.photoURL);
 	
 	let postList = posts.map((post, index) => {
 		return <Post key={index} data={post} />;
 	});
 
 	const changePicture = async () => {
-		let permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-		if (permission == "none") { return; }
-		let result = await ImagePicker.launchImageLibraryAsync({
-			quality: 1,
-			allowsEditing: true,
-			base64 : true,
-			aspect: [1,1],
-		});
-		if(result.assets){
-			setImage(result.assets[0].base64);
-			auth.currentUser.photoURL = result.assets[0].base64;
-			updateUserData(auth.currentUser, {picture: result.assets[0].base64} )
-		}
+		const picture = await selectPicture()
+		if(!picture) return;
+		const blob = await generateBlob(picture.uri)
+		const url = await uploadFile(blob, 'user/' + auth.currentUser.uid + '/pfp.jpg')
+		if(!url) return;
+		setImage(url);
+		auth.currentUser.photoURL = url;
+		updateUserData(auth.currentUser, {picture: url} )
 	}
 
 	return (
 		// Page Contents
 		<View style={styles.MainView}>
 			<Button 
-			pressStyle={ScreenStyles.ProfilePic}
+			style={ScreenStyles.ProfilePic}
 			imgStyle={ScreenStyles.ProfilePicImg}
 			onPress={changePicture} 
-			image={{uri: 'data:image/jpeg;base64,' + image}}
+			image={{uri: image}}
 			/>
 			<Text style={{ ...ScreenStyles.Name, ...styles.TextLight }}>
 				{name}
@@ -75,7 +62,7 @@ export const ProfileScreen = () => {
 					{"Recent Post:"}
 				</Text>
 				{postList[0]}
-				<Button pressStyle={ScreenStyles.HistoryButton}>
+				<Button style={ScreenStyles.HistoryButton}>
 					{"History"}
 				</Button>
 			</View>
@@ -87,16 +74,18 @@ export const ProfileScreen = () => {
 const ScreenStyles = StyleSheet.create({
 	ProfilePic: {
 		aspectRatio: 1 / 1,
-		width: "100%",
+		width: "40%",
 		borderRadius: 100,
 		margin: "3%",
 		marginTop: "10%",
 		borderWidth: 1,
+		overflow: "hidden",
 	},
 	ProfilePicImg: {
 		aspectRatio: 1 / 1,
-		height: "50%",
-		overflow: "hidden"
+		width: "100%",
+		overflow: "hidden",
+		borderRadius: 100,
 	},
 	Name: {
 		fontSize: 16,

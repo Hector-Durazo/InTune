@@ -1,5 +1,5 @@
 import { StyleSheet, View, Animated } from "react-native";
-import { styles } from "../styles/App.component.style.js";
+import { styles, colors } from "../styles/App.component.style.js";
 import { Button } from "./Button";
 
 // Footer
@@ -52,5 +52,6 @@ const compStyles = StyleSheet.create({
 		aspectRatio: 1 / 1,
 		width: "10%",
 		borderRadius: 100,
+		backgroundColor: colors.WhiteGb,
 	},
 });

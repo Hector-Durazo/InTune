@@ -20,17 +20,20 @@ export const Button = (props) => {
 
 	return (
 		<Pressable onPress={onPress}
-			style={(pressed) => {
-				return {
-					...style,
+			style={({pressed}) => [{
+					...compStyles.Button, ...style,
 					transform: [{ scale: pressed ? 0.9 : 1.0 }]
-				}
-			}}>
+			}]}>
 			{children}
 		</Pressable>
 	)
 }
 
 const compStyles = StyleSheet.create({
-
+	Button: {
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 100,
+	}
 })

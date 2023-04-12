@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback, useContext } from "react";
 import { View, Text, StyleSheet, ScrollView, RefreshControl } from "react-native";
 import { auth } from "../firebaseConfig.js";
-import { styles } from "../styles/App.component.style.js";
+import { colors, styles } from "../styles/App.component.style.js";
 import { Button, Post } from "../components";
 import { subscribeToUserPosts } from "../utils/UserData.js";
 import { AppState } from "../utils/AppState.js";
@@ -53,7 +53,7 @@ export function MainScreen({ navigation }) {
 	return (
 		<View style={styles.MainView}>
 			<ScrollView
-				style={mainStyles.PostList}
+				style={styles.ScrollView}
 				contentContainerStyle={{ alignItems: "center" }}
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -77,23 +77,25 @@ export function MainScreen({ navigation }) {
 
 const mainStyles = StyleSheet.create({
 	ShareButton: {
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
 		position: "absolute",
 		bottom: 20,
 		right: 20,
 		aspectRatio: 1 / 1,
-		width: "20%",
+		width: "25%",
 		borderRadius: 100,
-		paddingHorizontal: "55%",
+		borderWidth: 1,
+		borderColor: colors.GreyNi,
+		backgroundColor: colors.WhiteGb,
+		shadowColor: "rgba(0,0,0,0.25)",
+		elevation: 4,
+		shadowOffset: { width: 0, height: 4 },
 	},
 	ShareButImg: {
 		position: "relative",
-		aspectRatio: .90 / 1,
-		height: "60%",
+		aspectRatio: .9 / 1,
+		height: "65%",
 	},
-	PostList: {
-		display: "flex",
-		width: "100%",
-		height: "100%",
-
-	}
 })

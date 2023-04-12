@@ -31,18 +31,14 @@ export const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		alignItems: "flex-start",
 	},
-	// ScrollView container styling
-	Scroll: {
+	ScrollView: {
+		display: "flex",
 		width: "100%",
-		height: "90%",
-		alignItems: "center"
+		height: "100%",
 	},
-
 	Button: {
 		display: "flex",
-		marginVertical: "1%",
 		width: "70%",
-		padding: "3%",
 		borderRadius: 25,
 		justifyContent: "center",
 		alignItems: "center",
@@ -58,7 +54,6 @@ export const styles = StyleSheet.create({
 		color: colors.WhiteGb,
 	},
 
-
 	Logo: {
 		width: "80%",
 		height: "20%",
@@ -68,7 +63,7 @@ export const styles = StyleSheet.create({
 		padding: "2%",
 		marginBottom: 20,
 		borderRadius: 15,
-		color: "#DFDDE4",
+		color: colors.WhiteGb,
 		backgroundColor: "rgba(141,106,246,0.27)",
 		width: "80%",
 		height: "26%",
@@ -80,7 +75,7 @@ export const styles = StyleSheet.create({
 	TextField: {
 		padding: "2%",
 		borderRadius: 15,
-		color: "#DFDDE4",
+		color: colors.WhiteGb,
 		backgroundColor: "rgba(141,106,246,0.27)",
 		fontSize: 18,
 	},
@@ -91,7 +86,10 @@ export const styles = StyleSheet.create({
 		fontWeight: "400",
 	},
 	TextLight: {
-		color: "#DFDDE4",
+		color: colors.WhiteGb,
+	},
+	TextDark: {
+		color: colors.BlackSm,
 	},
 	Heading: {
 		fontSize: 28,
@@ -100,14 +98,14 @@ export const styles = StyleSheet.create({
 	ProfilePicImg: {
 		position: "relative",
 		aspectRatio: 1 / 1,
-		height: "175%",
-		overflow: "hidden"
+		height: "100%",
+		overflow: "hidden",
+		borderRadius: 100,
 	},
 	ProfilePicButton: {
 		aspectRatio: 1 / 1,
-		width: "15%",
+		width: "20%",
 		borderRadius: 100,
-		margin: "3%",
 		borderWidth: 1,
 	},
 });

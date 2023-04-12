@@ -1,8 +1,8 @@
 import { View, Pressable, Text, StyleSheet, Image, Animated, TextInput } from "react-native";
 import { styles, colors } from "../styles/App.component.style.js";
-import { Button } from './Button';
+import { Button } from './Button.js';
 
-export const Friend = (props) => {
+export const Notification = (props) => {
     
     const { data, navigation } = props
 
@@ -13,7 +13,7 @@ export const Friend = (props) => {
     return (
         <Animated.View style={{...compStyles.Container}}>
             <Pressable style={{...compStyles.Row}} onPress={onPress}>
-                <Image style = {compStyles.ProfilePicButton} source={{uri: data.picture}}/>
+                <Image style = {compStyles.ProfilePicButton} source={{uri: 'data:image/jpeg;base64,' + data.picture}}/>
                 <View style={compStyles.Column}>
                     <Text style={{...compStyles.Name}}>
                         {data.displayName}
@@ -34,7 +34,6 @@ const compStyles = StyleSheet.create({
         width: "95%",
         height: "12%",
         backgroundColor: colors.WhiteGb,
-        justifyContent: "center",
         borderRadius: 25,
 		marginBottom: 5,
 		marginHorizontal: "2%",
@@ -66,11 +65,11 @@ const compStyles = StyleSheet.create({
     Username: {
         alignSelf: "flex-start",
 		color: colors.BlackSm,
+
         fontSize: 10,
 	},
     ProfilePicButton: {
-        aspectRatio: 1 / 1,
-        width: "20%",
+        height: 50,
         borderRadius: 100,
         borderWidth: 1,
         marginRight: "2%",

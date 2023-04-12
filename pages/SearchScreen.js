@@ -23,7 +23,7 @@ export const SearchScreen = ({ route, navigation }) => {
 			<Search 
 			placeholder="Search"
 			onChange={onChange}/>
-			<ScrollView contentContainerStyle={styles.Scroll}>
+			<ScrollView contentContainerStyle={styles.ScrollView}>
 				{resultList}
 			</ScrollView>
 		</View>
