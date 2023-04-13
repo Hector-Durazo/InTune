@@ -1,11 +1,12 @@
 import {
 	onValue, ref as dbRef, set, update, get, query,
 	orderByChild, startAt, endAt, limitToFirst,
-	onChildAdded
+	onChildAdded, remove
 } from "firebase/database"
 import { ref as stRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 import * as ImagePicker from 'expo-image-picker'
 import { auth, db, storage } from "../firebaseConfig"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function checkNewUser(user) {
 	const userRef = dbRef(db, 'users/' + user.uid);
@@ -30,9 +31,9 @@ export function getUserData(dispatch) {
 		auth.currentUser.displayName = data.displayName
 		auth.currentUser.username = data.username
 		auth.currentUser.photoURL = data.picture
-		dispatch({ type: 'setFriends', friends: [data] }) // TODO: get friends
-		dispatch({ type: 'setRequests', requests: [data.requests] })
-		dispatch({ type: 'setRequested', requests: [data.requested] })
+		if(data.friends) dispatch({ type: 'setFriends', friends: data.friends }) // TODO: get friends
+		if(data.requests) dispatch({ type: 'setRequests', requests: data.requests })
+		if(data.requested) dispatch({ type: 'setRequested', requested: data.requested })
 	});
 }
 
@@ -53,13 +54,14 @@ export function addPost(id, data) {
  * @param {function} callback Function that is passed newest posts from user
  * @returns 
  */
-export function subscribeToUserPosts(uid, dispatch) {
-	const userRef = dbRef(db, 'users/' + uid + '/posts');
+export const subscribeToUserPosts = (uid, dispatch) => {
+	const userRef = dbRef(db, 'users/' + uid);
 	return onValue(userRef, (snapshot) => {
 		let data = snapshot.val()
-		if (!data) data = []
-		const postsNewest = Object.values(data).reverse()
-		dispatch({ type: 'setPosts', posts: postsNewest })
+		if(!data.posts) data.posts = {}
+		const postsNewest = Object.values(data.posts).reverse()
+		for(let i = 0; i < postsNewest.length; i++) postsNewest[i].picture = data.picture;
+		dispatch({ type: 'addPosts', uid: uid, posts: postsNewest })
 	})
 }
 
@@ -69,12 +71,15 @@ export function queryUsers(search) {
 	onChildAdded(queryRef, (snapshot) => {
 		const data = snapshot.val()
 		data.uid = snapshot.key
+		if(!data.posts) data.posts = []
+		if(!data.picture) data.picture = null
 		results.push(data)
 	}, (error) => { console.log(error) })
 	return results;
 }
 
 export const addRequest = (user) => {
+	console.log('Friend Request Sent')
 	const curTime = new Date().getTime()
 	const curUid = auth.currentUser.uid
 	const requestsRef = dbRef(db, 'users/' + user.uid + '/requests/' + curUid)
@@ -83,17 +88,58 @@ export const addRequest = (user) => {
 	const requestsData = {
 		displayName: auth.currentUser.displayName,
 		username: auth.currentUser.username,
+		picture: auth.currentUser.photoURL,
 		time: curTime
 	}
 
 	const requestedData = {
 		displayName: user.displayName,
 		username: user.username,
+		picture: user.picture,
 		time: curTime
 	}
 
 	update(requestsRef, requestsData)
 	update(requestedRef, requestedData)
+}
+
+export const addFriend = async (user) => {
+	console.log('Accepted Friend Request')
+	const curTime = new Date().getTime()
+	const curUid = auth.currentUser.uid
+	const friendRef = dbRef(db, 'users/' + user.uid + '/friends/' + curUid)
+	const userRef = dbRef(db, 'users/' + curUid + '/friends/' + user.uid)
+	const requestsRef = dbRef(db, 'users/' + user.uid + '/requests/' + curUid)
+	const requestedRef = dbRef(db, 'users/' + curUid + '/requested/' + user.uid)
+
+	const userData = {
+		displayName: auth.currentUser.displayName,
+		username: auth.currentUser.username,
+		picture: auth.currentUser.photoURL,
+		time: curTime
+	}
+
+	const friendData = {
+		displayName: user.displayName,
+		username: user.username,
+		picture: user.picture,
+		time: curTime
+	}
+
+	update(friendRef, userData)
+	update(userRef, friendData)
+	remove(requestsRef)
+	remove(requestedRef)
+}
+
+export const removeRequest = (user) => {
+	console.log('Friend Request Removed')
+	const curUid = auth.currentUser.uid
+	const requestsRef = dbRef(db, 'users/' + user.uid + '/requests/' + curUid)
+	const requestedRef = dbRef(db, 'users/' + curUid + '/requested/' + user.uid)
+
+	remove(requestsRef)
+	remove(requestedRef)
 }
 
 // Upload file to cloud storage
@@ -129,4 +175,22 @@ export const generateBlob = async (uri) => {
 		xhr.send(null)
 	})
 	return blob;
+}
+
+export const getLocalKeys = async () => {
+	//let keys = await AsyncStorage.getAllKeys()
+	const keys = [
+		'@spotifyAuthType',
+		'@spotifyAccess',
+		'@spotifyRefresh',
+		'@spotifyTime',
+		'@spotifySecret'
+	]
+	let authInd = keys.findIndex(key => key.includes('firebase:authUser'))
+	let res = await AsyncStorage.multiGet(keys)
+	res.forEach((val, ind) => {
+		console.log(`${val[0]}: ${val[1]}`)
+	})
+	console.log('\n')
+	//if(authInd != -1) signInOAuth(res[authInd][1])
 }

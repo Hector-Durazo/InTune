@@ -4,7 +4,7 @@ export const AppState = createContext([{}, function(){}]);
 
 
 const initialState = {
-	posts: [],
+	posts: {},
 	friends: [],
 	page: "Login",
 	requests: [],
@@ -17,6 +17,15 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				posts: action.posts
+			}
+		}
+		case 'addPosts': {
+			const uid = action.uid
+			let posts = JSON.parse(JSON.stringify(state.posts))
+			posts[uid] = action.posts
+			return {
+				...state,
+				posts: posts
 			}
 		}
 		case 'setFriends': {

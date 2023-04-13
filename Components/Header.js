@@ -4,14 +4,19 @@ import { colors, styles } from "../styles/App.component.style.js";
 import { Button } from "./Button";
 import { AppState } from '../utils/AppState.js';
 import { auth } from '../firebaseConfig.js';
+import { getUserData } from '../utils/UserData.js';
 
 export const Header = (props) => {
 	const { showRef, navRef } = props
 
-	const [{ friends, page }, dispatch] = useContext(AppState);
+	const [{ friends, page, requests, requested }, dispatch] = useContext(AppState);
 
 	let picture = null
 	if (auth.currentUser) picture = { uri: auth.currentUser.photoURL }
+
+	const numNotifs = Object.keys(requests).length
+	let notifText = 0
+	if(numNotifs) notifText = numNotifs
 
 	useEffect(() => {
 		const unsubNav = navRef.addListener('state', (e) => {
@@ -19,8 +24,10 @@ export const Header = (props) => {
 			const ind = state?.index;
 			if (ind !== undefined) dispatch({ type: 'setPage', page: state.routes[ind].name })
 		})
-		return () => unsubNav()
-	}, [navRef])
+		return () => {
+			unsubNav()
+		}
+	}, [navRef, getUserData])
 
 	return (
 		<View style={{ ...compStyles.Header }}>
@@ -40,7 +47,7 @@ export const Header = (props) => {
 					onPress={()=> { navRef.navigate("Notification") }}
 				>
 					<View style={compStyles.NotificationTextView}>
-						<Text style={compStyles.NotificationText}>1</Text>
+						<Text style={compStyles.NotificationText}>{notifText}</Text>
 					</View>
 				</Button>
 				<Image style={compStyles.Logo} source={require("../assets/InTune_Logo.png")} />
