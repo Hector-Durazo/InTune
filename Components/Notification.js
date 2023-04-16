@@ -1,11 +1,13 @@
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { View, Pressable, Text, StyleSheet, Image, Animated, TextInput } from "react-native";
 import { styles, colors } from "../styles/App.component.style.js";
 import { AppState } from '../utils/AppState';
 import { Button } from './Button.js';
+import { addFriend } from '../utils/UserData'
 
 export const Notification = (props) => {
     const { data, navigation } = props
+    const [ show, setShow ] = useState("flex")
     let picture = { uri: data.picture }
 
     const notifText = {
@@ -18,12 +20,11 @@ export const Notification = (props) => {
         "post": `See Post`,
     }
 
-    const onPress = (event) => {
-        // does an action to the notification
-    }
-
     return (
-        <Pressable style={compStyles.Row}>
+        <Pressable style={{
+            ...compStyles.Row,
+            display: {show}
+        }}>
             <Button
                 style={styles.ProfilePicButton}
                 imgStyle={styles.ProfilePicImg}
@@ -36,7 +37,10 @@ export const Notification = (props) => {
                 {notifText[data.type]}
             </Text>
             <Button 
-                onPress={onPress} 
+                onPress={() => {
+                    addFriend(data)
+                    setShow("none")
+                }} 
                 style={compStyles.QuickButton}
                 textStyle={{color:colors.WhiteGb}}>
                 {buttonText[data.type]}

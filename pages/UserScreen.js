@@ -24,7 +24,6 @@ export const UserScreen = ({ route, navigation, }) => {
 
 	let postList = postArray.map((post, index) => {
 		post.picture = data.picture
-		console.log(post)
 		return <Post key={index} data={post} />;
 	});
 

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Image, StyleSheet, View, Animated, StatusBar, Text } from "react-native";
 import { colors, styles } from "../styles/App.component.style.js";
 import { Button } from "./Button";
@@ -10,15 +10,17 @@ export const Header = (props) => {
 	const { showRef, navRef } = props
 
 	const [{ friends, page, requests, requested }, dispatch] = useContext(AppState);
+	const [ notifText, setNotifText ] = useState(0)
 
 	let picture = null
 	if (auth.currentUser) picture = { uri: auth.currentUser.photoURL }
 
-	const numNotifs = Object.keys(requests).length
-	let notifText = 0
-	if(numNotifs) notifText = numNotifs
-
 	useEffect(() => {
+		console.log("Header Use Effect Called")
+		let numNotifs = Object.keys(requests).length
+		if(!numNotifs) numNotifs = 0
+		setNotifText(numNotifs)
+
 		const unsubNav = navRef.addListener('state', (e) => {
 			const state = e.data.state;
 			const ind = state?.index;
@@ -27,7 +29,7 @@ export const Header = (props) => {
 		return () => {
 			unsubNav()
 		}
-	}, [navRef, getUserData])
+	}, [navRef, getUserData, setNotifText, requests])
 
 	return (
 		<View style={{ ...compStyles.Header }}>

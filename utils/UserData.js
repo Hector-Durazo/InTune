@@ -27,13 +27,16 @@ export function getUserData(dispatch) {
 	return onValue(userRef, (snapshot) => {
 		console.log('Calling getUserData')
 		if (!snapshot.exists()) return
-		const data = snapshot.val()
+		let data = snapshot.val()
 		auth.currentUser.displayName = data.displayName
 		auth.currentUser.username = data.username
 		auth.currentUser.photoURL = data.picture
-		if(data.friends) dispatch({ type: 'setFriends', friends: data.friends }) // TODO: get friends
-		if(data.requests) dispatch({ type: 'setRequests', requests: data.requests })
-		if(data.requested) dispatch({ type: 'setRequested', requested: data.requested })
+		if(!data.friends) data.friends = {}
+		if(!data.requests) data.requests = {}
+		if(!data.requested) data.requested = {}
+		dispatch({ type: 'setFriends', friends: data.friends })
+		dispatch({ type: 'setRequests', requests: data.requests })
+		dispatch({ type: 'setRequested', requested: data.requested })
 	});
 }
 
@@ -109,8 +112,8 @@ export const addFriend = async (user) => {
 	const curUid = auth.currentUser.uid
 	const friendRef = dbRef(db, 'users/' + user.uid + '/friends/' + curUid)
 	const userRef = dbRef(db, 'users/' + curUid + '/friends/' + user.uid)
-	const requestsRef = dbRef(db, 'users/' + user.uid + '/requests/' + curUid)
-	const requestedRef = dbRef(db, 'users/' + curUid + '/requested/' + user.uid)
+	const requestsRef = dbRef(db, 'users/' + curUid + '/requests/' + user.uid)
+	const requestedRef = dbRef(db, 'users/' + user.uid + '/requested/' + curUid)
 
 	const userData = {
 		displayName: auth.currentUser.displayName,

@@ -11,8 +11,7 @@ export function MainScreen({ navigation }) {
 
 	const [refreshing, setRefreshing] = useState(false);
 	const [{ posts, requests, requested, friends }, dispatch] = useContext(AppState)
-
-	console.log(posts)
+	const friendUids = Object.keys(friends)
 	// Go to LoginScreen on signout
 	auth.onAuthStateChanged((user) => {
 		if (!user) {
@@ -27,12 +26,19 @@ export function MainScreen({ navigation }) {
 	// Dispatch posts to global state only if postsRef updates
 	useEffect(() => {
 		console.debug('Fetching Posts')
-		const unsubscribePosts = subscribeToUserPosts(auth.currentUser.uid, dispatch, posts)
+		const unsubscribePosts = subscribeToUserPosts(auth.currentUser.uid, dispatch)
+		const unsubFriends = []
+		for(let i = 0; i < friendUids.length; i++) {
+			unsubFriends.push(subscribeToUserPosts(friendUids[i], dispatch))
+		}
 		const unsubscribeUser = getUserData(dispatch)
 
 		return () => {
 			unsubscribePosts()
 			unsubscribeUser()
+			for(let i = 0; i < unsubFriends.length; i++){
+				unsubFriends[i]()
+			}
 		}
 	}, [refreshing])
 
@@ -44,11 +50,10 @@ export function MainScreen({ navigation }) {
 		}, 500);
 	}, []);
 
-	const postArray = []
+	const postArray = [...posts[auth.currentUser.uid]]
 	const postsByUsers = Object.values(posts)
-	console.log(postsByUsers)
-	for(let i = 0; i < postsByUsers.length; i++){
-		postArray.push(...postsByUsers[i])
+	for(let i = 0; i < friendUids.length; i++){
+		postArray.push(...posts[friendUids[i]])
 	}
 	postArray.sort((a, b) => b.postedOn - a.postedOn)
 	let postList = postArray.map((post, index) => {

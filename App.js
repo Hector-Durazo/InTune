@@ -30,7 +30,8 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const url = useURL()
   handleUrl(url)
-  getLocalKeys()
+  // DEBUGGING LOCAL DATA
+  //getLocalKeys() 
 
   const [fontsLoaded] = useFonts({
     Inter_400Regular,

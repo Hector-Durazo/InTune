@@ -147,7 +147,6 @@ const refreshUser = async (refresh) => {
 		const time = new Date()
 		time.setSeconds(time.getSeconds() +
 			json.expires_in)
-		console.log(json)
 		await AsyncStorage.setItem('@spotifyAccess', json.access_token)
 		await AsyncStorage.setItem('@spotifyRefresh', json.refresh_token)
 		await AsyncStorage.setItem('@spotifyAuthType', 'user')

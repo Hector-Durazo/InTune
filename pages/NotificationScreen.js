@@ -17,7 +17,6 @@ export const NotificationScreen = ({navigation, route}) => {
 			notifications[i].uid = uids[i]
 			notifications[i].type = 'friend_request'
 		}
-		console.log(notifications)
 		return notifications
 	}
 
