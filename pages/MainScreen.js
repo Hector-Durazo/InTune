@@ -10,8 +10,8 @@ import { getUserTopTracks } from "../utils/Spotify.js";
 export function MainScreen({ navigation }) {
 
 	const [refreshing, setRefreshing] = useState(false);
+	const [postArray, setPostArray] = useState([])
 	const [{ posts, requests, requested, friends }, dispatch] = useContext(AppState)
-	const friendUids = useRef([])
 	// Go to LoginScreen on signout
 	auth.onAuthStateChanged((user) => {
 		if (!user) {
@@ -25,23 +25,45 @@ export function MainScreen({ navigation }) {
 	// Subscribe to relevant posts
 	// Dispatch posts to global state only if postsRef updates
 	useEffect(() => {
-		console.debug('Fetching Posts')
+		console.debug('Fetching Data')
 		const unsubscribeUser = getUserData(dispatch)
-		friendUids.current = Object.keys(friends)
-		const unsubscribePosts = subscribeToUserPosts(auth.currentUser.uid, dispatch)
-		const unsubFriends = []
-		for (let i = 0; i < friendUids.current.length; i++) {
-			unsubFriends.push(subscribeToUserPosts(friendUids.current[i], dispatch))
-		}
-
 		return () => {
-			unsubscribePosts()
 			unsubscribeUser()
-			for (let i = 0; i < unsubFriends.length; i++) {
-				unsubFriends[i]()
-			}
 		}
 	}, [refreshing])
+
+	useEffect(() => {
+		console.debug('Subscribing to Posts')
+		const unsub = []
+		const uids = Object.keys(friends)
+		uids.push(auth.currentUser.uid)
+		for (let i = 0; i < uids.length; i++) {
+			unsub.push(subscribeToUserPosts(uids[i], dispatch))
+		}
+		return () => {
+			for (let i = 0; i < unsub.length; i++) {
+				unsub[i]()
+			}
+		}
+	}, [friends])
+
+	useEffect(() => {
+		console.debug('Compiling Posts')
+		const compilePosts = () => {
+			const postArray = []
+			if (Object.keys(posts).length == 0) return [];
+			const curUserPosts = posts[auth.currentUser.uid]
+			if (curUserPosts) postArray.push(...curUserPosts)
+			const friendUids = Object.keys(friends)
+			for (let i = 0; i < friendUids.length; i++) {
+				const friendPosts = posts[friendUids[i]]
+				if (friendPosts) postArray.push(...friendPosts)
+			}
+			postArray.sort((a, b) => b.postedOn - a.postedOn)
+			return postArray
+		}
+		setPostArray(compilePosts())
+	}, [posts])
 
 	// Rerender when screen is pulled up
 	const onRefresh = useCallback(() => {
@@ -51,23 +73,6 @@ export function MainScreen({ navigation }) {
 		}, 500);
 	}, []);
 
-	const compilePosts = () => {
-		console.log("Compiling Posts")
-		const postArray = []
-		if (Object.keys(posts).length == 0) return [];
-		const curUserPosts = posts[auth.currentUser.uid]
-		if(curUserPosts) postArray.push(...curUserPosts)
-		if (friendUids.current) {
-			for (let i = 0; i < friendUids.current.length; i++) {
-				const friendPosts = posts[friendUids.current[i]]
-				if(friendPosts) postArray.push(...friendPosts)
-			}
-		}
-		return postArray
-	}
-
-	const postArray = compilePosts()
-	postArray.sort((a, b) => b.postedOn - a.postedOn)
 	const postList = postArray.map((post, index) => {
 		return <Post key={index} data={post} />
 	})
