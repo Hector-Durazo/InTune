@@ -25,7 +25,6 @@ export async function checkNewUser(user) {
 export function getUserData(dispatch) {
 	const userRef = dbRef(db, 'users/' + auth.currentUser.uid);
 	return onValue(userRef, (snapshot) => {
-		console.log('Calling getUserData')
 		if (!snapshot.exists()) return
 		let data = snapshot.val()
 		auth.currentUser.displayName = data.displayName
@@ -61,6 +60,7 @@ export const subscribeToUserPosts = (uid, dispatch) => {
 	const userRef = dbRef(db, 'users/' + uid);
 	return onValue(userRef, (snapshot) => {
 		let data = snapshot.val()
+		// If user has no posts, initialize to empty object
 		if(!data.posts) data.posts = {}
 		const postsNewest = Object.values(data.posts).reverse()
 		for(let i = 0; i < postsNewest.length; i++) postsNewest[i].picture = data.picture;
@@ -73,6 +73,7 @@ export const queryUsers = (search, setResults) => {
 	const results = []
 	const unsubscribe = onChildAdded(queryRef, (snapshot) => {
 		const data = snapshot.val()
+		console.log(data)
 		data.uid = snapshot.key
 		if(!data.posts) data.posts = []
 		if(!data.picture) data.picture = null
