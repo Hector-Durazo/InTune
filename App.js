@@ -6,15 +6,17 @@ import { useFonts, Inter_400Regular } from '@expo-google-fonts/inter';
 import { registerRootComponent } from "expo";
 import { useURL, parse } from 'expo-linking'
 import { Header, Footer } from './components/index';
-import { LoginScreen, MainScreen, ShareScreen, 
-        ProfileScreen, SettingsScreen, SearchScreen,
-        UserScreen, NotificationScreen
-      } from './pages/index';
+import {
+  LoginScreen, MainScreen, ShareScreen,
+  ProfileScreen, SettingsScreen, SearchScreen,
+  UserScreen, NotificationScreen
+} from './pages/index';
 import { LogBox } from 'react-native';
 import { AppStateProvider } from './utils/AppState';
 import { authorizeSpotifyUser } from './utils/Spotify';
 import { auth } from './firebaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getLocalKeys } from './utils/UserData';
 
 // Main App controller for navigation
 
@@ -27,14 +29,9 @@ LogBox.ignoreLogs([
 const Stack = createNativeStackNavigator();
 export default function App() {
   const url = useURL()
-  if(url){
-    const { hostname, path, queryParams } = parse(url)
-    const refresh = getRefresh()
-    if((!refresh) && queryParams && queryParams.code){
-      const { code, state } = queryParams
-      authorizeSpotifyUser(code)
-    }
-  }
+  handleUrl(url)
+  // DEBUGGING LOCAL DATA
+  //getLocalKeys() 
 
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
@@ -106,6 +103,13 @@ export default function App() {
 
 registerRootComponent(App)
 
-const getRefresh = async () => {
-  return await AsyncStorage.getItem('@spotifyRefresh')
+const handleUrl = async (url) => {
+  if (!url) return;
+  const { hostname, path, queryParams } = parse(url)
+  const refresh = await AsyncStorage.getItem('@spotifyRefresh')
+  if (refresh) await AsyncStorage.setItem('@spotifyAuthType', 'user')
+  if ((!refresh) && queryParams && queryParams.code) {
+    const { code, state } = queryParams
+    authorizeSpotifyUser(code)
+  }
 }

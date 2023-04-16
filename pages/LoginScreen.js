@@ -60,7 +60,7 @@ export const LoginScreen = ({ route, navigation }) => {
   })
 
   function logIn() {
-      getUserData(dispatch);
+      //getUserData(dispatch);
       Animated.timing(showRef.current,{
         toValue: 1,
         duration: 500,

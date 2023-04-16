@@ -15,7 +15,7 @@ export const ProfileScreen = () => {
 	const [{posts}, dispatch] = useContext(AppState)
 	const [image, setImage] = useState(auth.currentUser.photoURL);
 	
-	let postList = posts.map((post, index) => {
+	let postList = posts[auth.currentUser.uid].map((post, index) => {
 		return <Post key={index} data={post} />;
 	});
 

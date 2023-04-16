@@ -5,7 +5,7 @@ import { colors, styles } from "../styles/App.component.style.js";
 import { app, auth, db } from "../firebaseConfig.js";
 // Import Components
 import { Button, Post } from "../components/index.js";
-import { addRequest } from "../utils/UserData.js";
+import { addFriend, addRequest, getUserData, removeRequest, subscribeToUserPosts } from "../utils/UserData.js";
 import { AppState } from "../utils/AppState.js";
 
 export const UserScreen = ({ route, navigation, }) => {
@@ -16,21 +16,52 @@ export const UserScreen = ({ route, navigation, }) => {
 	const name = data.displayName
 	const userName = "@" + data.username
 
-	const [{posts}, dispatch] = useContext(AppState)
-	
-	let postList = posts.map((post, index) => {
+	const [{ requested, requests, friends, posts }, dispatch] = useContext(AppState)
+	const [status, setStatus] = useState('foe')
+
+	let postArray = []
+	if(posts[data.uid]) postArray.push(...posts[data.uid])
+
+	let postList = postArray.map((post, index) => {
+		post.picture = data.picture
 		return <Post key={index} data={post} />;
 	});
 
-	const addFriendText = "Add Friend"
+	useEffect(() => {
+		const unsubscribeUser = getUserData(dispatch)
+		const unsubscribePosts = subscribeToUserPosts(data.uid, dispatch)
+		const outgoingRequest = Object.keys(requested).includes(data.uid)
+		const incomingRequest = Object.keys(requests).includes(data.uid)
+		const friended = Object.keys(friends).includes(data.uid)
+		if (outgoingRequest) setStatus('out')
+		if (incomingRequest) setStatus('in')
+		if (friended) setStatus('friend')
+		return () => {
+			unsubscribeUser()
+			unsubscribePosts()
+		}
+	}, [getUserData, setStatus])
+
+
+
+	const buttonTextMap = {
+		'foe': 'Add Friend',
+		'out': 'Requested',
+		'in': 'Accept Request',
+		'friend': 'Remove Friend'
+	}
+
+	
+
+	// Add text for already friends
 
 	return (
 		// Page Contents
 		<View style={styles.MainView}>
-			<Button 
-			style={ScreenStyles.ProfilePic}
-			imgStyle={ScreenStyles.ProfilePicImg}
-			image={{uri: 'data:image/jpeg;base64,' + data.picture}}
+			<Button
+				style={ScreenStyles.ProfilePic}
+				imgStyle={ScreenStyles.ProfilePicImg}
+				image={{ uri: data.picture }}
 			/>
 			<Text style={{ ...ScreenStyles.Name, ...styles.TextLight }}>
 				{name}
@@ -48,12 +79,24 @@ export const UserScreen = ({ route, navigation, }) => {
 			>
 				{"Number of Friends Here"}
 			</Text>
-			<Button 
+			<Button
 				style={{ ...ScreenStyles.Button, ...ScreenStyles.AlignCenter }}
 				textStyle={ScreenStyles.ButtonText}
-				onPress={()=>{addRequest(data)}}
+				onPress={() => {
+					if (status == 'out') {
+						removeRequest(data)
+						setStatus('foe')
+					} else if (status == 'in') {
+						//add as friend
+						addFriend(data)
+						setStatus('friend')
+					} else {
+						addRequest(data)
+						setStatus('out')
+					}
+				}}
 			>
-					{addFriendText}
+				{buttonTextMap[status]}
 			</Button>
 			<View style={ScreenStyles.ProfileBody}>
 				<Text
@@ -62,7 +105,7 @@ export const UserScreen = ({ route, navigation, }) => {
 					{"Recent Post:"}
 				</Text>
 				{postList[0]}
-				<Button 
+				<Button
 					style={{ ...ScreenStyles.Button, ...styles.AlignEnd }}
 					textStyle={ScreenStyles.ButtonText}
 				>

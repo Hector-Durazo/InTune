@@ -3,14 +3,15 @@ import { View, Text, StyleSheet, ScrollView, RefreshControl } from "react-native
 import { auth } from "../firebaseConfig.js";
 import { colors, styles } from "../styles/App.component.style.js";
 import { Button, Post } from "../components";
-import { subscribeToUserPosts } from "../utils/UserData.js";
+import { getUserData, subscribeToUserPosts } from "../utils/UserData.js";
 import { AppState } from "../utils/AppState.js";
+import { getUserTopTracks } from "../utils/Spotify.js";
 
 export function MainScreen({ navigation }) {
 
 	const [refreshing, setRefreshing] = useState(false);
-	const [{ posts }, dispatch] = useContext(AppState)
-
+	const [{ posts, requests, requested, friends }, dispatch] = useContext(AppState)
+	const friendUids = Object.keys(friends)
 	// Go to LoginScreen on signout
 	auth.onAuthStateChanged((user) => {
 		if (!user) {
@@ -21,22 +22,25 @@ export function MainScreen({ navigation }) {
 		}
 	})
 
-
-	// Ref passed to Firebase listener to store post data
-	const postsRef = useRef([]);
-
-	const getPosts = useCallback(() => {
-		// TODO: Subscribe to and compile friend posts !!!
-		return subscribeToUserPosts(auth.currentUser.uid, dispatch)
-	})
-
 	// Subscribe to relevant posts
 	// Dispatch posts to global state only if postsRef updates
 	useEffect(() => {
 		console.debug('Fetching Posts')
-		const unsubscribe = getPosts()
-		return () => unsubscribe()
-	}, [postsRef, refreshing])
+		const unsubscribePosts = subscribeToUserPosts(auth.currentUser.uid, dispatch)
+		const unsubFriends = []
+		for(let i = 0; i < friendUids.length; i++) {
+			unsubFriends.push(subscribeToUserPosts(friendUids[i], dispatch))
+		}
+		const unsubscribeUser = getUserData(dispatch)
+
+		return () => {
+			unsubscribePosts()
+			unsubscribeUser()
+			for(let i = 0; i < unsubFriends.length; i++){
+				unsubFriends[i]()
+			}
+		}
+	}, [refreshing])
 
 	// Rerender when screen is pulled up
 	const onRefresh = useCallback(() => {
@@ -46,7 +50,13 @@ export function MainScreen({ navigation }) {
 		}, 500);
 	}, []);
 
-	let postList = posts.map((post, index) => {
+	const postArray = [...posts[auth.currentUser.uid]]
+	const postsByUsers = Object.values(posts)
+	for(let i = 0; i < friendUids.length; i++){
+		postArray.push(...posts[friendUids[i]])
+	}
+	postArray.sort((a, b) => b.postedOn - a.postedOn)
+	let postList = postArray.map((post, index) => {
 		return <Post key={index} data={post} />
 	});
 
@@ -68,7 +78,7 @@ export function MainScreen({ navigation }) {
 				image={require("../assets/InTune_Logo_Icon.png")}
 				imgStyle={{ ...mainStyles.ShareButImg, }}
 				onPress={() => {
-					navigation.navigate("Share")
+					navigation.navigate("Share", {topTracks: getUserTopTracks()})
 				}}
 			/>
 		</View>

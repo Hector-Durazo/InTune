@@ -9,10 +9,6 @@ import { Track } from './Track';
 export const Post = (props) => {
 	const { data } = props;
 	const [{friends}, dispatch] = useContext(AppState);
-	let picture = null;
-	const user = friends.find(user => user.username === data.username);
-	if (user && user.picture) picture = {uri: user.picture};
-	
 
 	var timeText = "";
 	const timeSince = (new Date().getTime() - data.postedOn)/1000;
@@ -39,11 +35,11 @@ export const Post = (props) => {
 				<Button 
 					style={styles.ProfilePicButton}
 					imgStyle={styles.ProfilePicImg}
-					image={picture}
+					image={{uri: data.picture}}
 					/>
 				<View style={compStyles.UserDetails}>
-					<Text style={compStyles.DisplayName}>{auth.currentUser.displayName}</Text>
-					<Text style={{...compStyles.UserName}}>{auth.currentUser.username}</Text>
+					<Text style={compStyles.DisplayName}>{data.displayName}</Text>
+					<Text style={{...compStyles.UserName}}>{data.username}</Text>
 				</View>
 				<View style={compStyles.PostDetails}>
 					<Text style={compStyles.TimeText}>{timeText}</Text>
@@ -72,34 +68,35 @@ const compStyles = StyleSheet.create({
 	UserDetails: {
 		flexDirection: "column",
 		height: "100%",
+		width: "40%",
 		alignItems: "flex-start",
 		justifyContent: "flex-start",
 		marginLeft: "2%",
 	},
 	DisplayName: {
 		color: colors.BlackSm,
-		fontSize: 20
+		fontSize: 14
 	},
 	UserName: {
 		color: colors.GreyNi,
-		fontSize: 15
+		fontSize: 12
 	},
 	PostDetails: {
 		flexDirection: "column",
 		height: "100%",
-		width: "45%",
+		width: "35%",
 		alignItems: "flex-end",
 		justifyContent: "flex-start",
-		marginLeft: "0%",
+		marginRight: "30%",
 		marginTop: 5
 	},
 	TimeText: {
-		fontSize: 15,
+		fontSize: 12,
 		color: colors.BlackSm,
 		textAlign: "right",
 	},
 	CommentText: {
-		fontSize: 15,
+		fontSize: 12,
 		color: colors.GreyNi,
 		textAlign: "right",
 	},	
