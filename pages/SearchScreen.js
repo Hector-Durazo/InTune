@@ -7,10 +7,11 @@ import { queryUsers } from "../utils/UserData.js";
 export const SearchScreen = ({ route, navigation }) => {
 	// Screen Variables, Refs, and Hooks
 	const [results, setResults] = useState([]);
+	const unsubscribe = useRef(null)
 
 	const onChange = (query) => {
-		const res = queryUsers(query);
-		setResults(res);
+		if(unsubscribe.current) unsubscribe.current()
+		unsubscribe.current = queryUsers(query, setResults);
 	}
 
 	const resultList = results.map((user, ind) => {

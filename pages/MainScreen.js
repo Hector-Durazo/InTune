@@ -11,7 +11,7 @@ export function MainScreen({ navigation }) {
 
 	const [refreshing, setRefreshing] = useState(false);
 	const [{ posts, requests, requested, friends }, dispatch] = useContext(AppState)
-	const friendUids = Object.keys(friends)
+	const friendUids = useRef([])
 	// Go to LoginScreen on signout
 	auth.onAuthStateChanged((user) => {
 		if (!user) {
@@ -26,17 +26,18 @@ export function MainScreen({ navigation }) {
 	// Dispatch posts to global state only if postsRef updates
 	useEffect(() => {
 		console.debug('Fetching Posts')
+		const unsubscribeUser = getUserData(dispatch)
+		friendUids.current = Object.keys(friends)
 		const unsubscribePosts = subscribeToUserPosts(auth.currentUser.uid, dispatch)
 		const unsubFriends = []
-		for(let i = 0; i < friendUids.length; i++) {
-			unsubFriends.push(subscribeToUserPosts(friendUids[i], dispatch))
+		for (let i = 0; i < friendUids.current.length; i++) {
+			unsubFriends.push(subscribeToUserPosts(friendUids.current[i], dispatch))
 		}
-		const unsubscribeUser = getUserData(dispatch)
 
 		return () => {
 			unsubscribePosts()
 			unsubscribeUser()
-			for(let i = 0; i < unsubFriends.length; i++){
+			for (let i = 0; i < unsubFriends.length; i++) {
 				unsubFriends[i]()
 			}
 		}
@@ -50,15 +51,26 @@ export function MainScreen({ navigation }) {
 		}, 500);
 	}, []);
 
-	const postArray = [...posts[auth.currentUser.uid]]
-	const postsByUsers = Object.values(posts)
-	for(let i = 0; i < friendUids.length; i++){
-		postArray.push(...posts[friendUids[i]])
+	const compilePosts = () => {
+		console.log("Compiling Posts")
+		const postArray = []
+		if (Object.keys(posts).length == 0) return [];
+		const curUserPosts = posts[auth.currentUser.uid]
+		if(curUserPosts) postArray.push(...curUserPosts)
+		if (friendUids.current) {
+			for (let i = 0; i < friendUids.current.length; i++) {
+				const friendPosts = posts[friendUids.current[i]]
+				if(friendPosts) postArray.push(...friendPosts)
+			}
+		}
+		return postArray
 	}
+
+	const postArray = compilePosts()
 	postArray.sort((a, b) => b.postedOn - a.postedOn)
-	let postList = postArray.map((post, index) => {
+	const postList = postArray.map((post, index) => {
 		return <Post key={index} data={post} />
-	});
+	})
 
 	return (
 		<View style={styles.MainView}>
@@ -78,7 +90,7 @@ export function MainScreen({ navigation }) {
 				image={require("../assets/InTune_Logo_Icon.png")}
 				imgStyle={{ ...mainStyles.ShareButImg, }}
 				onPress={() => {
-					navigation.navigate("Share", {topTracks: getUserTopTracks()})
+					navigation.navigate("Share", { topTracks: getUserTopTracks() })
 				}}
 			/>
 		</View>

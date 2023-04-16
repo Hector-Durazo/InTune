@@ -68,17 +68,18 @@ export const subscribeToUserPosts = (uid, dispatch) => {
 	})
 }
 
-export function queryUsers(search) {
+export const queryUsers = (search, setResults) => {
 	const queryRef = query(dbRef(db, 'users'), orderByChild('username'), startAt(search), limitToFirst(5))
 	const results = []
-	onChildAdded(queryRef, (snapshot) => {
+	const unsubscribe = onChildAdded(queryRef, (snapshot) => {
 		const data = snapshot.val()
 		data.uid = snapshot.key
 		if(!data.posts) data.posts = []
 		if(!data.picture) data.picture = null
 		results.push(data)
+		setResults(results)
 	}, (error) => { console.log(error) })
-	return results;
+	return unsubscribe;
 }
 
 export const addRequest = (user) => {
