@@ -5,7 +5,7 @@ import { getStorage } from 'firebase/storage'
 import Constants from 'expo-constants';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD4yPk_BGd3iLVEDqmQmV6mTqBY_CBbVXQ",
+  apiKey: "",
   authDomain: "intune-cbe3f.firebaseapp.com",
   projectId: "intune-cbe3f",
   storageBucket: "intune-cbe3f.appspot.com",
